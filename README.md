@@ -4,8 +4,8 @@ I wanted to create a fun way to learn about geography and countries, so I create
 
 ## Live Demo
 
-	[Demo](https://owenpk.com/sides/mapgame)
+[Demo](https://owenpk.com/sides/mapgame)
 
 
-	[Settings Menu](settings.png)
-	[Gameplay](gameplay.png)
+[Settings Menu](settings.png)
+[Gameplay](gameplay.png)
