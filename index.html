@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="tags" content="geography, geo, map, quiz, game" />
+    <meta name="description" content="Geography Quiz Games" />
+    <meta name="author" content="Owen Kuhn" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="theme-color" content="#222831" />
+    <title>Geotective</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" corssorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" corssorigin>
+
+    <link defer href="style.css" rel="stylesheet" />
+    <script defer src="script.js"></script>
+
+    <link defer href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <script defer id="geoJSON" src="res/geoJSON.js"></script>
+    <script defer id="countryData" src="res/countryData.js"></script> 
+    <link defer rel="manifest" href="manifest.json">
+    <link defer rel="shortcut icon" type="image/x-icon" href="res/favicon.png" />
+    <link defer rel="apple-touch-icon" href="res/favicon_maskable.png">
+    <link defer rel="stylesheet" href="res/leaflet.css"/>
+    <script defer src="res/leaflet.js" ></script>
+    <script defer src="res/fuzzysort-min.js"></script>
+</head>
+<body>
+    <div id="home" class="screen centered visible">
+        <div class="centeredContent">
+            <div id="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#7ac2ed" d="M482.38 261.17c0 74.593-36.047 140.766-91.667 182.067l-79.725 27.681-15.553-6.52L53.07 362.844a224.812 224.812 0 01-20.224-60.032l52.12-141.376L230.983 48.542l9.142-7.07 50.669-4.25a224.876 224.876 0 0166.492 21.281L481.6 251.78l.71 6.3.06 2.12c0 .31.01.64.01.97z"/><path fill="#68a6dc" d="M482.38 261.17c0 74.593-36.047 140.766-91.667 182.067l-79.725 27.681-15.553-6.52c86.826-26.761 149.928-107.634 149.928-203.228 0-117.435-95.218-212.638-212.67-212.638-.57 0-1.14 0-1.71.01l9.142-7.07 50.669-4.25a224.876 224.876 0 0166.492 21.281L481.6 251.78l.71 6.3.06 2.12c0 .31.01.64.01.97z"/><path fill="#d1e16f" d="M290.794 37.221c-8.922 4.9-16.563 9.62-23.084 14.18-63.172 44.082-22.614 72.923-38.917 103.994-20.344 38.762-99.128 14.28-118.372 29.321-25.675 20.061 0 102.244-77.574 118.095a227.684 227.684 0 01-3.821-41.642c0-69.963 31.706-132.525 81.535-174.097 39.317-32.811 89.917-52.552 145.137-52.552 11.932.001 23.654.921 35.096 2.701z"/><g fill="#d0edf5"><path d="M40.453 496.999H7.597a7.5 7.5 0 100 15h32.857a7.5 7.5 0 10-.001-15zM143.472 496.999H75.609a7.5 7.5 0 100 15h67.863a7.5 7.5 0 100-15zM27.6 479.999h62.862a7.5 7.5 0 100-15H27.6a7.5 7.5 0 100 15zM415.049 496.999h-62.862a7.5 7.5 0 100 15h62.862a7.5 7.5 0 100-15zM504.499 464.998h-92.868a7.5 7.5 0 100 15h92.868a7.5 7.5 0 100-15zM408.981 7.5c0-4.142-3.359-7.5-7.501-7.5h-32.857a7.5 7.5 0 100 15h32.857a7.5 7.5 0 007.501-7.5zM504.499 0h-67.863a7.5 7.5 0 100 15h67.863a7.5 7.5 0 100-15zM461.491 32.001h-62.862a7.5 7.5 0 100 15h62.862a7.5 7.5 0 100-15z"/></g><path fill="#d1e16f" d="M296.258 321.916c-7.141 16.339-58.722 12.608-71.332 0s-16.475-64.498 0-71.321c23.3-9.65 81.431 48.214 71.332 71.321zM390.713 443.237c-37.707 28.001-84.426 44.572-135.015 44.572-55.17 0-105.73-19.701-145.027-52.462a227.517 227.517 0 01-57.601-72.503c89.307 0 34.106-60.032 75.514-60.032 55.33 0 48.189 89.813 78.415 105.414 29.856 15.421 52.16-16.881 94.608-16.881 32.246 0 32.596 28.101 54.59 42.952 7.891 5.32 18.573 8.94 34.516 8.94z"/><path fill="#e6f8fc" d="M482.37 260.2c-.57-18.061-17.283-10.28-37.317-10.57-14.703-.21-31.196-4.78-44.408-27.091-31.096-52.522-105.43-13.541-105.43-78.403 0-36.061 47.099-6.51 59.241-57.322 1.8-7.52 2.831-16.801 2.831-28.311C431.2 95.604 482.01 171.947 482.37 260.2z"/><path fill="#9ccc4b" d="M232.693 48.532c-45.448 0-87.576 14.261-122.133 38.542 39.317-32.811 89.917-52.552 145.137-52.552 11.932 0 23.654.92 35.096 2.7-8.922 4.9-16.563 9.62-23.084 14.18a213.76 213.76 0 00-35.016-2.87zM356.196 434.297c7.891 5.32 18.573 8.94 34.516 8.94-37.707 28.001-84.426 44.572-135.015 44.572-55.17 0-105.73-19.701-145.027-52.462 34.536 24.241 76.614 38.461 122.023 38.461 46.049.001 88.687-14.64 123.503-39.511z"/><path fill="#d0edf5" d="M482.37 260.2c-.57-18.061-17.283-10.28-37.317-10.57-3.601-67.383-38.587-126.435-90.597-162.816 1.8-7.52 2.831-16.801 2.831-28.311C431.2 95.604 482.01 171.947 482.37 260.2z"/><path fill="#e6f8fc" d="M192.666 79.013c0 13.851-11.242 25.091-25.095 25.091H34.206C15.313 104.104 0 88.784 0 69.893c0-18.881 15.313-34.201 34.206-34.201 7.871 0 15.123 2.66 20.904 7.13C59.471 18.481 80.755 0 106.35 0a51.892 51.892 0 0131.106 10.3c12.712 9.49 20.954 24.661 20.954 41.752 0 1.22-.04 2.44-.12 3.64a25.091 25.091 0 019.282-1.77c13.852 0 25.094 11.231 25.094 25.091z"/><path fill="#d0edf5" d="M192.666 79.013c0 13.851-11.242 25.091-25.095 25.091H34.206C15.313 104.104 0 88.784 0 69.893c0 9.39 11.612 17.851 20.994 17.851h74.204c27.675-.27 50.019-22.791 50.019-50.522 0-9.9-2.84-19.131-7.761-26.921 12.712 9.49 20.954 24.661 20.954 41.752 0 1.22-.04 2.44-.12 3.64a25.091 25.091 0 019.282-1.77c13.852-.001 25.094 11.23 25.094 25.09z"/><g><path fill="#e6f8fc" d="M512 370.358c0 10.588-8.594 19.18-19.183 19.18H390.868c-14.443 0-26.148-11.712-26.148-26.152 0-14.433 11.706-26.145 26.148-26.145 6.017 0 11.56 2.034 15.98 5.451 3.334-18.607 19.604-32.734 39.169-32.734a39.665 39.665 0 0123.778 7.874c9.718 7.255 16.018 18.852 16.018 31.916 0 .933-.031 1.865-.092 2.783a19.185 19.185 0 017.095-1.353c10.59 0 19.184 8.585 19.184 19.18z"/><path fill="#d0edf5" d="M512 370.358c0 10.588-8.594 19.18-19.183 19.18H390.868c-14.443 0-26.148-11.712-26.148-26.152 0 7.178 8.877 13.646 16.048 13.646h56.724c21.156-.206 38.236-17.422 38.236-38.621 0-7.568-2.171-14.624-5.933-20.579 9.718 7.255 16.018 18.852 16.018 31.916 0 .933-.031 1.865-.092 2.783a19.185 19.185 0 017.095-1.353c10.59 0 19.184 8.585 19.184 19.18z"/></g></svg>
+            </div>
+            <h1 class="title">Geotective</h1>
+            <h2 class="subtitle">Geography Quiz Games</h2>
+            <br>
+            <div class="titlebtn"><div onclick="toScreen('newGame');">New Game</div></div>
+            <div class="titlebtn" id="resumeGameBtn" style="display:none;"><div onclick="toScreen('game');">Resume Game</div></div>
+            <div class="titlebtn"><div onclick="toScreen('settings');">Settings</div></div>
+            <div class="titlebtn"><div onclick="toScreen('attributions');">Attributions</div></div>
+            <br><br>
+        </div>
+    </div>
+  
+   <div id="settings" class="screen paddedContent">
+        <div class="title">Settings</div>
+        <br><br>
+        
+        <div class="inputWrap checkbox">
+            <input type="checkbox" id="setting_audio" oninput="onSettingsInput(this);" />
+            <label for="setting_audio">Sound</label>
+        </div>
+        
+        <br><br>
+        <div class="titlebtn"><div onclick="toScreen('home');">Back to Home</div></div>
+        <br><br>
+  </div>
+  
+  <div id="attributions" class="screen paddedContent">
+        <div class="title">Attributions</div>
+        <br><br>
+        <p>Games created by <b>Owen Kuhn</b></p>
+        <br>
+        <p>Icons made by <a rel="noreferrer" href="https://www.freepik.com" title="Freepik" target="_blank">Freepik</a> from <a href="https://www.flaticon.com/" rel="noreferrer" title="Flaticon" target="_blank">www.flaticon.com</a></p>
+        <br>
+        <p>Map service thanks to <a href="https://leafletjs.com/" title="Leaflet" rel="noreferrer" target="_blank">Leaflet</a></p>
+        <br>
+        <p>"Satelite" Map tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community</p>
+        <br>
+        <p>"Correct" sound effect by <a href="https://freesound.org/people/Eponn/" rel="noreferrer" target="_blank">Eponn</a></p>
+        <br>
+        <p>"Incorrect" sound effect by <a href="https://freesound.org/people/timgormly/" rel="noreferrer"target="_blank">Tim Gormly</a></p>
+        <br><br>
+        <div class="titlebtn"><div onclick="toScreen('home');">Back to Home</div></div>
+        <br><br>
+  </div>
+  
+    <div id="newGame" class="screen paddedContent">
+        <div class="centeredContent">
+            <div class="title">New Game</div>
+            <br>
+            <div class="gameModes">
+                <input id="gameMode_1" value="1" type="radio" name="gameMode" oninput="onGameModeChange(this.value)" class="hidden" checked />
+                <label for="gameMode_1"><div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M316 30h-17.563C292.24 12.539 275.556 0 256 0c-19.556 0-36.24 12.539-42.437 30H196c-24.814 0-45 20.186-45 45 0 8.291 6.709 15 15 15h180c8.291 0 15-6.709 15-15 0-24.814-20.186-45-45-45z"/><path d="M406 60h-16.518A74.989 74.989 0 01391 75c0 24.814-20.186 45-45 45H166c-24.814 0-45-20.186-45-45 0-5.136.529-10.151 1.518-15H106c-24.814 0-45 20.186-45 45v362c0 24.814 20.186 45 45 45h300c24.814 0 45-20.186 45-45V105c0-24.814-20.186-45-45-45zM211 420h-60c-8.291 0-15-6.709-15-15s6.709-15 15-15h60c8.291 0 15 6.709 15 15s-6.709 15-15 15zm0-105h-60c-8.291 0-15-6.709-15-15s6.709-15 15-15h60c8.291 0 15 6.709 15 15s-6.709 15-15 15zm0-105h-60c-8.291 0-15-6.709-15-15s6.709-15 15-15h60c8.291 0 15 6.709 15 15s-6.709 15-15 15zm145.605 214.395c5.859 5.859 5.859 15.352 0 21.211A14.952 14.952 0 01346 450.001a14.95 14.95 0 01-10.605-4.395L316 426.211l-19.395 19.395A14.952 14.952 0 01286 450.001a14.95 14.95 0 01-10.605-4.395c-5.859-5.859-5.859-15.352 0-21.211L294.789 405l-19.395-19.395c-5.859-5.859-5.859-15.352 0-21.211s15.352-5.859 21.211 0L316 383.789l19.395-19.395c5.859-5.859 15.352-5.859 21.211 0s5.859 15.352 0 21.211L337.211 405l19.394 19.395zm15-143.79l-45 45A14.952 14.952 0 01316 330a14.95 14.95 0 01-10.605-4.395l-30-30c-5.859-5.859-5.859-15.352 0-21.211s15.352-5.859 21.211 0L316 293.789l34.395-34.395c5.859-5.859 15.352-5.859 21.211 0 5.859 5.859 5.859 15.352-.001 21.211zm0-90l-45 45A14.952 14.952 0 01316 240a14.95 14.95 0 01-10.605-4.395l-30-30c-5.859-5.859-5.859-15.352 0-21.211s15.352-5.859 21.211 0L316 203.789l34.395-34.395c5.859-5.859 15.352-5.859 21.211 0s5.859 15.352-.001 21.211z"/></svg>
+                    <span>Multiple Choice</span>
+                </div></label>
+                <input id="gameMode_2" value="2" type="radio" name="gameMode" oninput="onGameModeChange(this.value)" class="hidden" />
+                <label for="gameMode_2"><div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-128 0 512 512"><path d="M234.668 469.332H192c-23.531 0-42.668-19.133-42.668-42.664V85.332c0-23.531 19.137-42.664 42.668-42.664h42.668c11.773 0 21.332-9.54 21.332-21.336S246.441 0 234.668 0H192c-25.602 0-48.34 11.562-64 29.484C112.34 11.562 89.602 0 64 0H21.332C9.559 0 0 9.535 0 21.332s9.559 21.336 21.332 21.336H64c23.531 0 42.668 19.133 42.668 42.664v341.336c0 23.531-19.137 42.664-42.668 42.664H21.332C9.559 469.332 0 478.872 0 490.668S9.559 512 21.332 512H64c25.602 0 48.34-11.563 64-29.484C143.66 500.437 166.398 512 192 512h42.668c11.773 0 21.332-9.535 21.332-21.332s-9.559-21.336-21.332-21.336zm0 0"/></svg>
+                    <span>Free Response</span>
+                </div></label>
+            </div>
+            <br>
+            <div class="inputWrap">
+                <label for="region">Region</label>
+                <div style="position: relative;">
+                    <select id="region" oninput="this.blur();">
+                        <option value="All" selected>All</option>
+                        <option>Africa</option>
+                        <option>Americas</option>
+                        <option>Asia</option>
+                        <option>Europe</option>
+                        <option>Oceania</option>
+                        <!-- <option>Polar</option> -->
+                    </select>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 491.996 491.996"><path d="M484.132 124.986l-16.116-16.228c-5.072-5.068-11.82-7.86-19.032-7.86-7.208 0-13.964 2.792-19.036 7.86l-183.84 183.848L62.056 108.554c-5.064-5.068-11.82-7.856-19.028-7.856s-13.968 2.788-19.036 7.856l-16.12 16.128c-10.496 10.488-10.496 27.572 0 38.06l219.136 219.924c5.064 5.064 11.812 8.632 19.084 8.632h.084c7.212 0 13.96-3.572 19.024-8.632l218.932-219.328c5.072-5.064 7.856-12.016 7.864-19.224 0-7.212-2.792-14.068-7.864-19.128z"/></svg>
+                </div>
+            </div>
+            <br>
+            <div class="inputWrap checkbox">
+                <input id="includeIslands" type="checkbox" checked />
+                <label for="includeIslands">Include Tiny Islands</label>
+            </div>
+            
+            <div id="settingGroup_1" class="settingGroup visible">
+                <div class="inputWrap">
+                    <label>Number of Options</label>
+                    <div>
+                        <input id="mc_numQuestions2" type="radio" name="mc_numQuestions" value="2" class="hidden" />
+                        <label for="mc_numQuestions2" class="radioLabel">2</label>
+                        <input id="mc_numQuestions3" type="radio" name="mc_numQuestions" value="3" class="hidden" />
+                        <label for="mc_numQuestions3" class="radioLabel">3</label>
+                        <input id="mc_numQuestions4" type="radio" name="mc_numQuestions" value="4" class="hidden" checked />
+                        <label for="mc_numQuestions4" class="radioLabel">4</label>
+                        <input id="mc_numQuestions5" type="radio" name="mc_numQuestions" value="5" class="hidden" />
+                        <label for="mc_numQuestions5" class="radioLabel">5</label>
+                        <input id="mc_numQuestions6" type="radio" name="mc_numQuestions" value="6" class="hidden" />
+                        <label for="mc_numQuestions6" class="radioLabel">6</label>
+                    </div>
+                </div>
+                <br><br>
+                <div class="halfhalf">
+                    <div>
+                        <label>Question</label>
+                        <div>
+                            <input id="mc_question_1" type="radio" name="mc_question" value="map" oninput="onQuestionRadioChange(this)" class="hidden" checked />
+                            <label for="mc_question_1" class="radioLabel">Map</label>
+                        </div>
+                        <div>
+                            <input id="mc_question_2" type="radio" name="mc_question" value="flag" oninput="onQuestionRadioChange(this)" class="hidden" />
+                            <label for="mc_question_2" class="radioLabel">Flag</label>
+                        </div>
+                        <div>
+                            <input id="mc_question_3" type="radio" name="mc_question" value="name" oninput="onQuestionRadioChange(this)" class="hidden" />
+                            <label for="mc_question_3" class="radioLabel">Country Name</label>
+                        </div>
+                        <div>
+                            <input id="mc_question_4" type="radio" name="mc_question" value="capital" oninput="onQuestionRadioChange(this)" class="hidden" />
+                            <label for="mc_question_4" class="radioLabel">Capital</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Answer</label>
+                        <div>
+                            <input id="mc_answer_2" type="radio" name="mc_answer" value="flag" class="hidden" />
+                            <label for="mc_answer_2" class="radioLabel">Flag</label>
+                        </div>
+                        <div>
+                            <input id="mc_answer_3" type="radio" name="mc_answer" value="name" class="hidden" checked />
+                            <label for="mc_answer_3" class="radioLabel">Country Name</label>
+                        </div>
+                        <div>
+                            <input id="mc_answer_4" type="radio" name="mc_answer" value="capital" class="hidden" />
+                            <label for="mc_answer_4" class="radioLabel">Capital</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="settingGroup_2" class="settingGroup">
+            <div class="inputWrap checkbox">
+                <input id="fr_autocomplete" type="checkbox" checked />
+                <label for="fr_autocomplete">Autocomplete</label>
+            </div>
+                <br><br>
+                <div class="halfhalf">
+                    <div>
+                        <label>Question</label>
+                        <div>
+                            <input id="fr_question_1" type="radio" name="fr_question" value="map" oninput="onQuestionRadioChange(this)" class="hidden" checked />
+                            <label for="fr_question_1" class="radioLabel">Map</label>
+                        </div>
+                        <div>
+                            <input id="fr_question_2" type="radio" name="fr_question" value="flag" oninput="onQuestionRadioChange(this)" class="hidden" />
+                            <label for="fr_question_2" class="radioLabel">Flag</label>
+                        </div>
+                        <div>
+                            <input id="fr_question_3" type="radio" name="fr_question" value="name" oninput="onQuestionRadioChange(this)" class="hidden" />
+                            <label for="fr_question_3" class="radioLabel">Country Name</label>
+                        </div>
+                        <div>
+                            <input id="fr_question_4" type="radio" name="fr_question" value="capital" oninput="onQuestionRadioChange(this)" class="hidden" />
+                            <label for="fr_question_4" class="radioLabel">Capital</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Answer</label>
+                        <div>
+                            <input id="fr_answer_3" type="radio" name="fr_answer" value="name" class="hidden" checked />
+                            <label for="fr_answer_3" class="radioLabel">Country Name</label>
+                        </div>
+                        <div>
+                            <input id="fr_answer_4" type="radio" name="fr_answer" value="capital" class="hidden" />
+                            <label for="fr_answer_4" class="radioLabel">Capital</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <br><br>
+            <div class="titlebtn"><div onclick="newGame()">Start Game</div></div>
+            <div class="titlebtn"><div onclick="toScreen('home');">Back to Home</div></div>
+            <br><br>
+        </div>
+    </div>
+  
+    <div id="game" class="screen">
+        <svg id="fs_correct" class="feedbackSymbol" xmlns="http://www.w3.org/2000/svg" viewBox="0 -46 417.813 417"><path d="M159.988 318.582c-3.988 4.012-9.43 6.25-15.082 6.25s-11.094-2.238-15.082-6.25L9.375 198.113c-12.5-12.5-12.5-32.77 0-45.246l15.082-15.086c12.504-12.5 32.75-12.5 45.25 0l75.2 75.203L348.104 9.781c12.504-12.5 32.77-12.5 45.25 0l15.082 15.086c12.5 12.5 12.5 32.766 0 45.246zm0 0"/></svg>
+        <svg id="fs_incorrect" class="feedbackSymbol" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249.499 249.499"><path d="M7.079 214.851l25.905 26.276c9.536 9.674 25.106 9.782 34.777.252l56.559-55.761 55.739 56.548c9.542 9.674 25.112 9.782 34.78.246l26.265-25.887c9.674-9.536 9.788-25.106.246-34.786l-55.742-56.547 56.565-55.754c9.667-9.536 9.787-25.106.239-34.786L216.52 8.375c-9.541-9.667-25.111-9.782-34.779-.252l-56.568 55.761-55.74-56.553C59.891-2.337 44.32-2.451 34.65 7.079L8.388 32.971c-9.674 9.542-9.791 25.106-.252 34.786l55.745 56.553-56.55 55.767c-9.674 9.53-9.791 25.106-.252 34.774z"/></svg>
+        <div class="floatingBtn" onclick="toScreen('inGameMenu');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M442.214 104.982C413.647 76.449 373.806 36.552 346 8.78v96.216z"/><path d="M451 134.981l-135 .023V0H61v490.907l127.527-127.014 44.973 44.973L324.366 318H286v-30h90v90h-30v-39.208l-112.5 112.5-45.027-45.027L82.33 512H451zm-194.999 74.756H136v-30h120.001zm0-74.737H136v-30h120.001z"/></svg></div>
+        <div id="map" class="map"></div>
+        <div id="answerBank">
+            <div id="fr_answer">
+                <div id="fr_suggestions"></div>
+                <input id="fr_answer_input" type="text" inputmode="search" spellcheck="false" autocomplete="off" autocapitalize="none" placeholder="Your Answer" oninput="onFRInput(this)" onkeydown="onFRKeyDown(event, this)" onfocus="onFRFocus(this)" onblur="onFRBlur(this)" />
+            </div>
+        </div>
+    </div>
+    <div id="inGameMenu" class="screen paddedContent">
+        <div id="inGameMenuBtn_back" class="floatingBtn red smaller" onclick="toScreen('game');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.26933 329"><path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"></path></svg></div>
+        <div class="title">Menu</div>
+            <div id="menuStat"><div>0%</div><div>0 / 0</div></div>
+            <br>
+            <div id="menuSummary"></div>
+        <br><br>
+        <div id="inGameMenuBtn_new" class="titlebtn"><div onclick="toScreen('newGame');">New Game</div></div>
+        <div id="inGameMenuBtn_resume" class="titlebtn"><div onclick="toScreen('game');">Resume</div></div>
+        <div class="titlebtn"><div onclick="toScreen('home');">Home Screen</div></div>
+        <br><br>
+    </div>
+</body>
+</html>

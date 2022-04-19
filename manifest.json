@@ -1,0 +1,21 @@
+{
+  "name": "Geotective",
+  "short_name": "Geotective",
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "background_color": "#222831",
+  "theme_color": "#222831",
+  "description": "Geography Quiz Games",
+  "icons": [{
+    "src": "res/favicon.png",
+    "sizes": "512x512",
+    "type": "image/png",
+    "purpose": "any"
+  },
+  {
+    "src": "res/favicon_maskable.png",
+    "sizes": "512x512",
+    "type": "image/png",
+    "purpose": "any maskable"
+  }]
+}

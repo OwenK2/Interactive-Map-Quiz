@@ -1,0 +1,28 @@
+
+DirectoryIndex index.html
+DefaultLanguage en-US
+AddDefaultCharset UTF-8
+
+# Force HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off 
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+
+# Turn off cache for testing
+<FilesMatch ".(php|css|html|js)$">
+Header set Cache-Control "max-age=0"
+</FilesMatch>
+
+<FilesMatch ".(pdf|svg|txt|flv|gif|jpg|jpeg|png|ico|swf|otf|ttf|webp|jp2)$">
+  Header set Cache-Control "max-age=31557600"
+</FilesMatch>
+<FilesMatch "leaflet/*">
+  Header set Cache-Control "max-age=31557600"
+</FilesMatch>
+<FilesMatch "geoJSON.js">
+  Header set Cache-Control "max-age=31557600"
+</FilesMatch>
+<FilesMatch "countryData.js">
+  Header set Cache-Control "max-age=31557600"
+</FilesMatch>
