@@ -7,5 +7,5 @@ I wanted to create a fun way to learn about geography and countries, so I create
 [Demo](https://owenpk.com/sides/mapgame)
 
 
-![Settings Menu](settings.png)
+![Settings Menu](menu.png)
 ![Gameplay](gameplay.png)
