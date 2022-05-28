@@ -8,4 +8,4 @@ I wanted to create a fun way to learn about geography and countries, so I create
 
 [Live Demo](https://owenpk.com/sides/mapgame)
 
-![Game Demo](demo.gif)
+![Game Demo](res/demo.gif)
