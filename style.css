@@ -475,6 +475,15 @@ input:checked + .radioLabel {
     height: 100px;
     opacity: .85;
 }
+.countryShapeQuestion {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    -webkit-filter: invert();
+    -moz-filter: invert();
+    -ms-filter: invert();
+    -o-filter: invert();
+    filter: invert();
+}
 #answerBank {
     width: 100%;
     position: absolute;

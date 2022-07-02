@@ -1,6 +1,6 @@
 let map, highlighted = [];
 let game = {}, settings = {};
-let geometry = {}, countries = [], subregions = {}, regions = {}, nameToCode = {}, autocompleteCountries = [], capitalToCode = {}, autocompleteCapitals = [];
+let geometry = {}, countries = [], subregions = {}, regions = {}, nameToCode = {}, autocompleteCountries = [], capitalToCode = {}, autocompleteCapitals = [], countryStyle = {};
 const transitionTime = 1000;
 
 const defaultGame = {
@@ -26,7 +26,7 @@ const defaultCountryStyle = {
     fillOpacity: .3,
     interactive: false
 };
-const highlightedCountryStyle = {
+const defaultHighlightedCountryStyle = {
     weight: 3,
     fillOpacity: .3,
     color: "var(--accent)",
@@ -83,6 +83,7 @@ window.addEventListener('load', function() {
     document.getElementById('region').value = game.region;
     document.getElementById('includeIslands').checked = game.includeIslands;
     document.getElementById('resumeGameBtn').style.display = game.ended ? 'none' : 'block';
+
     onResize()
 });
 if(window.visualViewport) {
@@ -92,6 +93,14 @@ else {
     window.addEventListener('resize', onResize);
 }
 window.addEventListener('orientationchange', onResize);
+window.addEventListener('keydown', function(event) {
+    if(event.key === 'Escape' && !game.ended && document.getElementById('inGameMenu').classList.contains('visible')) {
+        toScreen('game');
+    }
+    else if(event.key === 'Escape' && !game.ended && document.getElementById('game').classList.contains('visible')) {
+        toScreen('inGameMenu');
+    }
+});
 
 function onResize(event) {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -256,16 +265,19 @@ function makeQuestion(c) {
             unHighlight();
             highlight(geometry[c]);
             disableControls(600);
-            map.flyTo(countryData[c].center, c === 'RUS' ? 2.5 : 4.5, {duration: transitionTime/1000});
+            map.flyTo(countryData[c].center, calculateZoomLevel(c), {duration: transitionTime/1000});
             break;
         case 'flag':
-            fadeInQuestion('<img src="'+countryData[c].flag+'" />');
+            fadeInQuestion('<img onerror="makeQuestion();" src="'+countryData[c].flag+'" />');
             break;
         case 'name':
             fadeInQuestion(countryData[c].name);
             break;
         case 'capital':
             fadeInQuestion(countryData[c].capital);
+            break;
+        case 'shape':
+            fadeInQuestion('<img class="countryShapeQuestion" onerror="makeQuestion();" src="https://worldle.teuteuf.fr/images/countries/'+countryData[c].a2.toLowerCase()+'/vector.svg" />');
             break;
     }
     if(game.mode === 1) {setMCQuestions();}
@@ -484,7 +496,7 @@ function endGame() {
 
 
 //Helper Functions
-function loadMap(options = {}, countryOptions = {}) {
+function loadMap(options = {}, countryOptions = {}, baseMap = true) {
     //Clear Up Old Map/data if exists
     deleteMap();
     
@@ -493,14 +505,16 @@ function loadMap(options = {}, countryOptions = {}) {
     map = L.map('map', options);
     
     //Set BASEMAP
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'}).addTo(map);
-    // L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {attribution: 'Tiles &copy; Esri &mdash; Source: US National Park Service',maxZoom: 8}).addTo(map);
+    if(baseMap) {
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'}).addTo(map);
+        // L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {attribution: 'Tiles &copy; Esri &mdash; Source: US National Park Service',maxZoom: 8}).addTo(map);
+    }
     
     //Add country geoJSON
-    countryOptions = Object.assign({}, defaultCountryStyle, countryOptions);
+    countryStyle = Object.assign({}, defaultCountryStyle, countryOptions);
     L.geoJSON(geoJSON, {
         style: function(f, e) {
-          return countryOptions;
+          return countryStyle;
         },
         onEachFeature: function(f, e) {
             geometry[f.id] = e;
@@ -528,11 +542,11 @@ function removeItem(arr, value, deep = false) {
 }
 function unHighlight() {
     for(var i = 0;i < highlighted.length;++i) {
-        highlighted[i].setStyle(defaultCountryStyle);
+        highlighted[i].setStyle(countryStyle);
     }
     highlighted = [];
 }
-function highlight(elem, options = highlightedCountryStyle) {
+function highlight(elem, options = defaultHighlightedCountryStyle) {
     elem.setStyle(options);
     elem.bringToFront();
     highlighted.push(elem);
@@ -635,3 +649,15 @@ function unlockAudio() {
 }
 
 window.addEventListener('mousedown', unlockAudio);
+
+function calculateZoomLevel(c) {
+    switch(c) {
+        case 'RUS': return 2.5; break;
+        case 'CHN': return 4; break;
+        case 'USA': return 3.5; break;
+        case 'CAN': return 3.5; break;
+        case 'BRA': return 4; break;
+        case 'ATA': return 2.3; break;
+        default: return 4.5;
+    }
+}
