@@ -6,6 +6,6 @@ I wanted to create a fun way to learn about geography and countries, so I create
 
 ## Live Demo
 
-[Live Demo](https://owenpk.com/sides/mapgame)
+[Live Demo](https://denniskuhn.com/owen/geotective)
 
 ![Game Demo](res/demo.gif)
