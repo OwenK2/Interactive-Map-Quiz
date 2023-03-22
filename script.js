@@ -1332,7 +1332,7 @@ function name2codeEx(name) {
 }
 function capital2code(name) {
     name = normalizeName(name);
-    if(name in nameToCapital) {return nameToCapital[name];}
+    if(name in capitalToCode) {return capitalToCode[name];}
     return null;
 }
 function normalizeNameExtended(name) {
