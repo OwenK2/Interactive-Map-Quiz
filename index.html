@@ -7,37 +7,35 @@
     <meta name="author" content="Owen Kuhn" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta name="theme-color" content="#222831" />
+    <meta name="theme-color" content="#0A0A0A" />
     <title>Geotective</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" corssorigin>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://unpkg.com" corssorigin>
 
-    <link defer href="style.css" rel="stylesheet" />
+    <link rel="dns-prefetch" href="https://server.arcgisonline.com">
+
+
+    <link href="style.css" rel="stylesheet" />
     <script defer src="script.js"></script>
 
-    <link defer href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
-    <script defer id="geoJSON" src="res/geoJSON.js"></script>
-    <script defer id="countryData" src="res/countryData.js"></script> 
     <link defer rel="manifest" href="manifest.json">
     <link defer rel="shortcut icon" type="image/x-icon" href="res/favicon.png" />
     <link defer rel="apple-touch-icon" href="res/favicon_maskable.png">
-    <link defer rel="stylesheet" href="res/leaflet.css"/>
-    <script defer src="res/leaflet.js" ></script>
-    <script defer src="res/fuzzysort-min.js"></script>
+    <link defer rel="stylesheet" href="res/lib/leaflet.css"/>
+    <script defer src="res/lib/leaflet.js" ></script>
+    <script defer src="res/lib/smooth-zoom.js" ></script>
+    <script defer src="res/lib/fuzzysort-min.js"></script>
 </head>
 <body>
-    <div id="home" class="screen centered visible">
+    <div id="home" class="screen centered visible" style="display: grid;">
         <div class="centeredContent">
             <div id="logo">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#7ac2ed" d="M482.38 261.17c0 74.593-36.047 140.766-91.667 182.067l-79.725 27.681-15.553-6.52L53.07 362.844a224.812 224.812 0 01-20.224-60.032l52.12-141.376L230.983 48.542l9.142-7.07 50.669-4.25a224.876 224.876 0 0166.492 21.281L481.6 251.78l.71 6.3.06 2.12c0 .31.01.64.01.97z"/><path fill="#68a6dc" d="M482.38 261.17c0 74.593-36.047 140.766-91.667 182.067l-79.725 27.681-15.553-6.52c86.826-26.761 149.928-107.634 149.928-203.228 0-117.435-95.218-212.638-212.67-212.638-.57 0-1.14 0-1.71.01l9.142-7.07 50.669-4.25a224.876 224.876 0 0166.492 21.281L481.6 251.78l.71 6.3.06 2.12c0 .31.01.64.01.97z"/><path fill="#d1e16f" d="M290.794 37.221c-8.922 4.9-16.563 9.62-23.084 14.18-63.172 44.082-22.614 72.923-38.917 103.994-20.344 38.762-99.128 14.28-118.372 29.321-25.675 20.061 0 102.244-77.574 118.095a227.684 227.684 0 01-3.821-41.642c0-69.963 31.706-132.525 81.535-174.097 39.317-32.811 89.917-52.552 145.137-52.552 11.932.001 23.654.921 35.096 2.701z"/><g fill="#d0edf5"><path d="M40.453 496.999H7.597a7.5 7.5 0 100 15h32.857a7.5 7.5 0 10-.001-15zM143.472 496.999H75.609a7.5 7.5 0 100 15h67.863a7.5 7.5 0 100-15zM27.6 479.999h62.862a7.5 7.5 0 100-15H27.6a7.5 7.5 0 100 15zM415.049 496.999h-62.862a7.5 7.5 0 100 15h62.862a7.5 7.5 0 100-15zM504.499 464.998h-92.868a7.5 7.5 0 100 15h92.868a7.5 7.5 0 100-15zM408.981 7.5c0-4.142-3.359-7.5-7.501-7.5h-32.857a7.5 7.5 0 100 15h32.857a7.5 7.5 0 007.501-7.5zM504.499 0h-67.863a7.5 7.5 0 100 15h67.863a7.5 7.5 0 100-15zM461.491 32.001h-62.862a7.5 7.5 0 100 15h62.862a7.5 7.5 0 100-15z"/></g><path fill="#d1e16f" d="M296.258 321.916c-7.141 16.339-58.722 12.608-71.332 0s-16.475-64.498 0-71.321c23.3-9.65 81.431 48.214 71.332 71.321zM390.713 443.237c-37.707 28.001-84.426 44.572-135.015 44.572-55.17 0-105.73-19.701-145.027-52.462a227.517 227.517 0 01-57.601-72.503c89.307 0 34.106-60.032 75.514-60.032 55.33 0 48.189 89.813 78.415 105.414 29.856 15.421 52.16-16.881 94.608-16.881 32.246 0 32.596 28.101 54.59 42.952 7.891 5.32 18.573 8.94 34.516 8.94z"/><path fill="#e6f8fc" d="M482.37 260.2c-.57-18.061-17.283-10.28-37.317-10.57-14.703-.21-31.196-4.78-44.408-27.091-31.096-52.522-105.43-13.541-105.43-78.403 0-36.061 47.099-6.51 59.241-57.322 1.8-7.52 2.831-16.801 2.831-28.311C431.2 95.604 482.01 171.947 482.37 260.2z"/><path fill="#9ccc4b" d="M232.693 48.532c-45.448 0-87.576 14.261-122.133 38.542 39.317-32.811 89.917-52.552 145.137-52.552 11.932 0 23.654.92 35.096 2.7-8.922 4.9-16.563 9.62-23.084 14.18a213.76 213.76 0 00-35.016-2.87zM356.196 434.297c7.891 5.32 18.573 8.94 34.516 8.94-37.707 28.001-84.426 44.572-135.015 44.572-55.17 0-105.73-19.701-145.027-52.462 34.536 24.241 76.614 38.461 122.023 38.461 46.049.001 88.687-14.64 123.503-39.511z"/><path fill="#d0edf5" d="M482.37 260.2c-.57-18.061-17.283-10.28-37.317-10.57-3.601-67.383-38.587-126.435-90.597-162.816 1.8-7.52 2.831-16.801 2.831-28.311C431.2 95.604 482.01 171.947 482.37 260.2z"/><path fill="#e6f8fc" d="M192.666 79.013c0 13.851-11.242 25.091-25.095 25.091H34.206C15.313 104.104 0 88.784 0 69.893c0-18.881 15.313-34.201 34.206-34.201 7.871 0 15.123 2.66 20.904 7.13C59.471 18.481 80.755 0 106.35 0a51.892 51.892 0 0131.106 10.3c12.712 9.49 20.954 24.661 20.954 41.752 0 1.22-.04 2.44-.12 3.64a25.091 25.091 0 019.282-1.77c13.852 0 25.094 11.231 25.094 25.091z"/><path fill="#d0edf5" d="M192.666 79.013c0 13.851-11.242 25.091-25.095 25.091H34.206C15.313 104.104 0 88.784 0 69.893c0 9.39 11.612 17.851 20.994 17.851h74.204c27.675-.27 50.019-22.791 50.019-50.522 0-9.9-2.84-19.131-7.761-26.921 12.712 9.49 20.954 24.661 20.954 41.752 0 1.22-.04 2.44-.12 3.64a25.091 25.091 0 019.282-1.77c13.852-.001 25.094 11.23 25.094 25.09z"/><g><path fill="#e6f8fc" d="M512 370.358c0 10.588-8.594 19.18-19.183 19.18H390.868c-14.443 0-26.148-11.712-26.148-26.152 0-14.433 11.706-26.145 26.148-26.145 6.017 0 11.56 2.034 15.98 5.451 3.334-18.607 19.604-32.734 39.169-32.734a39.665 39.665 0 0123.778 7.874c9.718 7.255 16.018 18.852 16.018 31.916 0 .933-.031 1.865-.092 2.783a19.185 19.185 0 017.095-1.353c10.59 0 19.184 8.585 19.184 19.18z"/><path fill="#d0edf5" d="M512 370.358c0 10.588-8.594 19.18-19.183 19.18H390.868c-14.443 0-26.148-11.712-26.148-26.152 0 7.178 8.877 13.646 16.048 13.646h56.724c21.156-.206 38.236-17.422 38.236-38.621 0-7.568-2.171-14.624-5.933-20.579 9.718 7.255 16.018 18.852 16.018 31.916 0 .933-.031 1.865-.092 2.783a19.185 19.185 0 017.095-1.353c10.59 0 19.184 8.585 19.184 19.18z"/></g></svg>
             </div>
             <h1 class="title">Geotective</h1>
-            <h2 class="subtitle">Geography Quiz Games</h2>
+            <h2 class="subtitle">Geography Quiz</h2>
             <br>
             <div class="titlebtn"><div onclick="toScreen('newGame');">New Game</div></div>
-            <div class="titlebtn" id="resumeGameBtn" style="display:none;"><div onclick="toScreen('game');">Resume Game</div></div>
+            <div class="titlebtn" id="resumeGameBtn" style="display:none;"><div onclick="resumeGame();">Resume Game</div></div>
+            <div class="titlebtn"><div onclick="loadExploreMap();">Explore</div></div>
             <div class="titlebtn"><div onclick="toScreen('settings');">Settings</div></div>
             <div class="titlebtn"><div onclick="toScreen('attributions');">Attributions</div></div>
             <br><br>
@@ -81,6 +79,7 @@
         <div class="centeredContent">
             <div class="title">New Game</div>
             <br>
+            <label class="newGameLabel" style="text-align: center">Game Mode</label>
             <div class="gameModes">
                 <input id="gameMode_1" value="1" type="radio" name="gameMode" oninput="onGameModeChange(this.value)" class="hidden" checked />
                 <label for="gameMode_1"><div>
@@ -90,34 +89,59 @@
                 <input id="gameMode_2" value="2" type="radio" name="gameMode" oninput="onGameModeChange(this.value)" class="hidden" />
                 <label for="gameMode_2"><div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-128 0 512 512"><path d="M234.668 469.332H192c-23.531 0-42.668-19.133-42.668-42.664V85.332c0-23.531 19.137-42.664 42.668-42.664h42.668c11.773 0 21.332-9.54 21.332-21.336S246.441 0 234.668 0H192c-25.602 0-48.34 11.562-64 29.484C112.34 11.562 89.602 0 64 0H21.332C9.559 0 0 9.535 0 21.332s9.559 21.336 21.332 21.336H64c23.531 0 42.668 19.133 42.668 42.664v341.336c0 23.531-19.137 42.664-42.668 42.664H21.332C9.559 469.332 0 478.872 0 490.668S9.559 512 21.332 512H64c25.602 0 48.34-11.563 64-29.484C143.66 500.437 166.398 512 192 512h42.668c11.773 0 21.332-9.535 21.332-21.332s-9.559-21.336-21.332-21.336zm0 0"/></svg>
-                    <span>Free Response</span>
+                    <span>Free<br>Response</span>
+                </div></label>
+                <input id="gameMode_3" value="3" type="radio" name="gameMode" oninput="onGameModeChange(this.value)" class="hidden" />
+                <label for="gameMode_3"><div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="m19.98 28.05 7.04-3.21V3.95l-7.03 3.21v20.89zm-7.96-3.21L19 27.73V6.84l-6.98-2.89v20.89zM3.98 7.16v20.89l7.04-2.9V4.28l-7.04 2.9z"/></svg>
+                    <span>Map Fill</span>
                 </div></label>
             </div>
-            <br>
-            <div class="inputWrap">
-                <label for="region">Region</label>
-                <div style="position: relative;">
-                    <select id="region" oninput="this.blur();">
-                        <option value="All" selected>All</option>
-                        <option>Africa</option>
-                        <option>Americas</option>
-                        <option>Asia</option>
-                        <option>Europe</option>
-                        <option>Oceania</option>
-                        <!-- <option>Polar</option> -->
-                    </select>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 491.996 491.996"><path d="M484.132 124.986l-16.116-16.228c-5.072-5.068-11.82-7.86-19.032-7.86-7.208 0-13.964 2.792-19.036 7.86l-183.84 183.848L62.056 108.554c-5.064-5.068-11.82-7.856-19.028-7.856s-13.968 2.788-19.036 7.856l-16.12 16.128c-10.496 10.488-10.496 27.572 0 38.06l219.136 219.924c5.064 5.064 11.812 8.632 19.084 8.632h.084c7.212 0 13.96-3.572 19.024-8.632l218.932-219.328c5.072-5.064 7.856-12.016 7.864-19.224 0-7.212-2.792-14.068-7.864-19.128z"/></svg>
+            <div id="newGameErr">No countries match your game settings, please re-configure</div>
+            <div id="regionCheckboxes" class="inputWrap">
+                <label style="text-align: center">Region</label>
+                <div class="inputWrap checkbox" style="padding-bottom: 10px;">
+                    <input id="regionAll" type="checkbox" checked oninput="regionSettingUpdate(this);"/>
+                    <label for="regionAll">All Regions</label>
+                </div>
+                <div class="inputWrap checkbox">
+                    <input id="regionAfrica" type="checkbox" checked oninput="regionSettingUpdate(this);"/>
+                    <label for="regionAfrica">Africa</label>
+                </div>
+                <div class="inputWrap checkbox">
+                    <input id="regionAmericas" type="checkbox" checked oninput="regionSettingUpdate(this);"/>
+                    <label for="regionAmericas">Americas</label>
+                </div>
+                <div class="inputWrap checkbox">
+                    <input id="regionAsia" type="checkbox" checked oninput="regionSettingUpdate(this);"/>
+                    <label for="regionAsia">Asia</label>
+                </div>
+                <div class="inputWrap checkbox">
+                    <input id="regionEurope" type="checkbox" checked oninput="regionSettingUpdate(this);"/>
+                    <label for="regionEurope">Europe</label>
+                </div>
+                <div class="inputWrap checkbox">
+                    <input id="regionOceania" type="checkbox" checked oninput="regionSettingUpdate(this);"/>
+                    <label for="regionOceania">Oceania</label>
+                </div>
+                <div class="inputWrap checkbox">
+                    <input id="regionPolar" type="checkbox" checked oninput="regionSettingUpdate(this);"/>
+                    <label for="regionPolar">Polar</label>
                 </div>
             </div>
             <br>
             <div class="inputWrap checkbox">
-                <input id="includeIslands" type="checkbox" checked />
+                <input id="isRecognized" type="checkbox" />
+                <label for="isRecognized">Recognized Countries Only</label>
+            </div>
+            <br>
+            <div class="inputWrap checkbox">
+                <input id="includeIslands" type="checkbox" />
                 <label for="includeIslands">Include Tiny Islands</label>
             </div>
-            
             <div id="settingGroup_1" class="settingGroup visible">
                 <div class="inputWrap">
-                    <label>Number of Options</label>
+                    <label style="text-align: center;">Number of Options</label>
                     <div>
                         <input id="mc_numQuestions2" type="radio" name="mc_numQuestions" value="2" class="hidden" />
                         <label for="mc_numQuestions2" class="radioLabel">2</label>
@@ -175,10 +199,10 @@
             </div>
             
             <div id="settingGroup_2" class="settingGroup">
-            <div class="inputWrap checkbox">
-                <input id="fr_autocomplete" type="checkbox" checked />
-                <label for="fr_autocomplete">Autocomplete</label>
-            </div>
+                <div class="inputWrap checkbox">
+                    <input id="fr_autocomplete" type="checkbox" checked />
+                    <label for="fr_autocomplete">Autocomplete</label>
+                </div>
                 <br><br>
                 <div class="halfhalf">
                     <div>
@@ -217,6 +241,18 @@
                     </div>
                 </div>
             </div>
+
+            <div id="settingGroup_3" class="settingGroup">
+                <div class="inputWrap checkbox">
+                    <input id="fm_timer" type="checkbox" checked oninput="fmTimerInput(this)" />
+                    <label for="fm_timer">Timer</label>
+                </div> 
+                <br>
+                <div id="timeInput" class="inputWrap">
+                    <label for="fm_time">Time (mins)</label>
+                    <input id="fm_time" type="text" inputmode="numeric" spellcheck="false" autocomplete="off" autocapitalize="none" oninput="filterPosInt(this)" />
+                </div>
+            </div>
             
             <br><br>
             <div class="titlebtn"><div onclick="newGame()">Start Game</div></div>
@@ -228,7 +264,11 @@
     <div id="game" class="screen">
         <svg id="fs_correct" class="feedbackSymbol" xmlns="http://www.w3.org/2000/svg" viewBox="0 -46 417.813 417"><path d="M159.988 318.582c-3.988 4.012-9.43 6.25-15.082 6.25s-11.094-2.238-15.082-6.25L9.375 198.113c-12.5-12.5-12.5-32.77 0-45.246l15.082-15.086c12.504-12.5 32.75-12.5 45.25 0l75.2 75.203L348.104 9.781c12.504-12.5 32.77-12.5 45.25 0l15.082 15.086c12.5 12.5 12.5 32.766 0 45.246zm0 0"/></svg>
         <svg id="fs_incorrect" class="feedbackSymbol" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249.499 249.499"><path d="M7.079 214.851l25.905 26.276c9.536 9.674 25.106 9.782 34.777.252l56.559-55.761 55.739 56.548c9.542 9.674 25.112 9.782 34.78.246l26.265-25.887c9.674-9.536 9.788-25.106.246-34.786l-55.742-56.547 56.565-55.754c9.667-9.536 9.787-25.106.239-34.786L216.52 8.375c-9.541-9.667-25.111-9.782-34.779-.252l-56.568 55.761-55.74-56.553C59.891-2.337 44.32-2.451 34.65 7.079L8.388 32.971c-9.674 9.542-9.791 25.106-.252 34.786l55.745 56.553-56.55 55.767c-9.674 9.53-9.791 25.106-.252 34.774z"/></svg>
-        <div class="floatingBtn" onclick="toScreen('inGameMenu');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M442.214 104.982C413.647 76.449 373.806 36.552 346 8.78v96.216z"/><path d="M451 134.981l-135 .023V0H61v490.907l127.527-127.014 44.973 44.973L324.366 318H286v-30h90v90h-30v-39.208l-112.5 112.5-45.027-45.027L82.33 512H451zm-194.999 74.756H136v-30h120.001zm0-74.737H136v-30h120.001z"/></svg></div>
+        <div class="gameBtns">
+            <div class="floatingBtn" onclick="toScreen('inGameMenu');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M139.6 0H46.5A46.6 46.6 0 0 0 0 46.5v418.9C0 491.1 20.9 512 46.5 512h93.1c25.7 0 46.5-20.9 46.5-46.5v-419C186.2 20.9 165.3 0 139.6 0zm325.9 0h-93.1c-25.7 0-46.5 20.9-46.5 46.5v418.9c0 25.7 20.9 46.5 46.5 46.5h93.1c25.7 0 46.5-20.9 46.5-46.5V46.5A46.6 46.6 0 0 0 465.5 0z"/></svg></div>
+            <div id="revealCountriesBtn" class="floatingBtn" style="display: none;" onclick="identifyRemainingCountries();"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M479.55 265.75a27.28 27.28 0 0 1 0-19.52l19.47-51.1a27.4 27.4 0 0 0-10.63-32.72l-45.8-29.9a27.44 27.44 0 0 1-11.47-15.8l-14.3-52.8A27.43 27.43 0 0 0 389 43.67l-54.63 2.73a27.47 27.47 0 0 1-18.57-6.03L273.2 6.08a27.4 27.4 0 0 0-34.4 0l-42.6 34.3a27.48 27.48 0 0 1-18.57 6.03L123 43.68a27.43 27.43 0 0 0-27.83 20.23L80.9 116.7a27.48 27.48 0 0 1-11.48 15.8l-45.8 29.9a27.41 27.41 0 0 0-10.63 32.71l19.48 51.12c2.4 6.29 2.4 13.24 0 19.52l-19.48 51.12a27.42 27.42 0 0 0 10.63 32.7l45.8 29.92a27.35 27.35 0 0 1 11.48 15.79l14.28 52.8A27.42 27.42 0 0 0 123 468.3l54.63-2.72a27.38 27.38 0 0 1 18.57 6.02l42.6 34.32a27.4 27.4 0 0 0 34.4 0l42.6-34.32a27.37 27.37 0 0 1 18.56-6.02l54.63 2.72a27.42 27.42 0 0 0 27.83-20.23l14.3-52.8a27.3 27.3 0 0 1 11.47-15.78l45.8-29.91A27.4 27.4 0 0 0 499 316.88l-19.46-51.13zM288.78 369.13a18.94 18.94 0 0 1-18.93 18.94h-27.7a18.95 18.95 0 0 1-18.94-18.94V340.2a18.95 18.95 0 0 1 18.94-18.94h27.7c10.45 0 18.93 8.49 18.93 18.94v28.92zm0-100.18a18.93 18.93 0 0 1-18.93 18.93h-27.7a18.94 18.94 0 0 1-18.94-18.93V142.88a18.94 18.94 0 0 1 18.94-18.94h27.7a18.93 18.93 0 0 1 18.93 18.94v126.07z"/></svg></div>
+        </div>
+        <div id="gameTimer"><div id="gameTimerValue"></div><span id="gameTimerStat"></span></div>
         <div id="map" class="map"></div>
         <div id="answerBank">
             <div id="fr_answer">
@@ -238,16 +278,143 @@
         </div>
     </div>
     <div id="inGameMenu" class="screen paddedContent">
-        <div id="inGameMenuBtn_back" class="floatingBtn red smaller" onclick="toScreen('game');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.26933 329"><path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"></path></svg></div>
+        <div class="gameBtns">
+            <div id="inGameMenuBtn_back" class="floatingBtn red smaller" onclick="toScreen('game');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.26933 329"><path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"></path></svg></div>
+        </div>
         <div class="title">Menu</div>
             <div id="menuStat"><div>0%</div><div>0 / 0</div></div>
+            <br>
+            <div id="timeStat"></div>
             <br>
             <div id="menuSummary"></div>
         <br><br>
         <div id="inGameMenuBtn_new" class="titlebtn"><div onclick="toScreen('newGame');">New Game</div></div>
-        <div id="inGameMenuBtn_resume" class="titlebtn"><div onclick="toScreen('game');">Resume</div></div>
+        <div id="inGameMenuBtn_resume" class="titlebtn"><div onclick="resumeGame();">Resume</div></div>
         <div class="titlebtn"><div onclick="toScreen('home');">Home Screen</div></div>
         <br><br>
+    </div>
+    <div id="explore" class="screen">
+        <div id="exploreSearch" onclick="toggleExploreSearch()">
+            <div onclick="event.stopPropagation();">
+                <div id="searchBarWrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10 .5C4.75329.5.5 4.75329.5 10c0 5.2467 4.25329 9.5 9.5 9.5 2.082 0 4.0076-.6698 5.5731-1.8056l4.7198 4.7198c.3905.3905 1.0237.3905 1.4142 0l.7071-.7071c.3905-.3905.3905-1.0237 0-1.4142l-4.7198-4.7198C18.8302 14.0076 19.5 12.082 19.5 10c0-5.24671-4.2533-9.5-9.5-9.5ZM3.5 10c0-3.58985 2.91015-6.5 6.5-6.5 3.5899 0 6.5 2.91015 6.5 6.5 0 3.5899-2.9101 6.5-6.5 6.5-3.58985 0-6.5-2.9101-6.5-6.5Z" clip-rule="evenodd"/></svg>
+                    <input id="countrySearch" type="text" inputmode="search" spellcheck="false" autocomplete="off" autocapitalize="none" placeholder="Search for a country" oninput="onExploreSearchInput(this);" onkeydown="onExploreSearchKeyDown(event, this);" />
+                </div>
+                <div id="exploreSearchSuggestions"></div>
+            </div>
+        </div>
+        <div id="exploreMenu">
+            <div><svg onclick="hideExploreDetails();deleteExploreMap();toScreen('home');" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" xml:space="preserve"><path d="M48.6 23H15.4c-.9 0-1.3-1.1-.7-1.7l9.6-9.6c.6-.6.6-1.5 0-2.1l-2.2-2.2c-.6-.6-1.5-.6-2.1 0L2.5 25c-.6.6-.6 1.5 0 2.1L20 44.6c.6.6 1.5.6 2.1 0l2.1-2.1c.6-.6.6-1.5 0-2.1l-9.6-9.6c-.6-.7-.2-1.8.7-1.8h33.2c.8 0 1.5-.6 1.5-1.4v-3c0-.8-.6-1.6-1.4-1.6z"/></svg></div>
+            <div><svg onclick="toggleExploreSearch();" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10 .5C4.75329.5.5 4.75329.5 10c0 5.2467 4.25329 9.5 9.5 9.5 2.082 0 4.0076-.6698 5.5731-1.8056l4.7198 4.7198c.3905.3905 1.0237.3905 1.4142 0l.7071-.7071c.3905-.3905.3905-1.0237 0-1.4142l-4.7198-4.7198C18.8302 14.0076 19.5 12.082 19.5 10c0-5.24671-4.2533-9.5-9.5-9.5ZM3.5 10c0-3.58985 2.91015-6.5 6.5-6.5 3.5899 0 6.5 2.91015 6.5 6.5 0 3.5899-2.9101 6.5-6.5 6.5-3.58985 0-6.5-2.9101-6.5-6.5Z" clip-rule="evenodd"/></svg></div>
+        </div>
+        <div id="exploreMap"></div>
+        <div id="exploreDetails">
+            <svg onclick="hideExploreDetails();" class="closeExploreDetails" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2Zm3.36 12.3c.29.29.29.77 0 1.06a.74.74 0 0 1-.53.22.74.74 0 0 1-.53-.22l-2.3-2.3-2.3 2.3a.74.74 0 0 1-.53.22.74.74 0 0 1-.53-.22.75.75 0 0 1 0-1.06l2.3-2.3-2.3-2.3a.75.75 0 0 1 0-1.06.75.75 0 0 1 1.06 0l2.3 2.3 2.3-2.3a.75.75 0 0 1 1.06 0c.29.29.29.77 0 1.06l-2.3 2.3 2.3 2.3Z" /></svg>
+            <div class="exploreTitle">
+                <img id="exploreFlag" height="64" style="display: none;" />
+                <div style="min-width: 150px">
+                    <div id="exploreCountryName">Explore</div>
+                    <div id="exploreCountrySubtitle">
+                        <svg id="exploreRecognized" title="Recognized Country" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.6 9.8a4.6 4.6 0 0 1-.4-.8 4 4 0 0 1-.2-1 4.2 4.2 0 0 0-.6-2 4.3 4.3 0 0 0-2-1.4 4.8 4.8 0 0 1-.8-.4 5.1 5.1 0 0 1-.6-.7 4.2 4.2 0 0 0-1.8-1.4 4.2 4.2 0 0 0-2.2.1 4.2 4.2 0 0 1-2 0 4.2 4.2 0 0 0-2.2 0A4.2 4.2 0 0 0 7 3.4a5.1 5.1 0 0 1-.7.7 4.8 4.8 0 0 1-.8.4A4.3 4.3 0 0 0 3.6 6 4.2 4.2 0 0 0 3 8.1a4 4 0 0 1-.2.9 4.6 4.6 0 0 1-.4.8 4.3 4.3 0 0 0-.8 2.2 4.3 4.3 0 0 0 .8 2.2 4 4 0 0 1 .4.8 4.1 4.1 0 0 1 .2 1 4.2 4.2 0 0 0 .6 2 4.3 4.3 0 0 0 1.9 1.4 4.8 4.8 0 0 1 .8.4 5.1 5.1 0 0 1 .7.7 4.1 4.1 0 0 0 1.8 1.4 3 3 0 0 0 .9 0 6.7 6.7 0 0 0 1.3 0 4 4 0 0 1 2 0 4.3 4.3 0 0 0 2.2 0 4.1 4.1 0 0 0 1.8-1.4 5.1 5.1 0 0 1 .6-.7 4.8 4.8 0 0 1 .9-.4 4.3 4.3 0 0 0 1.9-1.3 4.2 4.2 0 0 0 .6-2.2 4.1 4.1 0 0 1 .1-1 4.6 4.6 0 0 1 .5-.7 4.3 4.3 0 0 0 .8-2.2 4.3 4.3 0 0 0-.8-2.2Zm-4.9 1-5 5a1 1 0 0 1-1.4 0l-3-3a1 1 0 1 1 1.4-1.5l2.3 2.3 4.3-4.3a1 1 0 0 1 1.4 1.4Z"/></svg>
+                        <span id="exploreCountryCodes">Click a country to get information</span>
+                    </div>
+                </div>
+            </div>
+            <div id="exploreFacts" style="display: none">
+                <div id="exploreFactGrid" >
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"><path d="M7 0c-.3 0-.5.2-.5.5v4C3.9 4.7 3 6.1 3 7h8c0-1-1-2.3-3.5-2.5v-4C7.5.2 7.2 0 7 0zm1 0v3h4l-2-1.5L12 0H8zM1 8v1h1v4H1l-1 1h14l-1-1h-1V9h1V8H1zm3 1h1v4H4V9zm2 0h2v4H6V9zm3 0h1v4H9V9z"/></svg>
+                        <div>
+                            <span>Capital</span>
+                            <span id="exploreDetailCapital"></span>
+                        </div>
+                    </div>
+                    <div id="exploreDetailSovereigntyWrapper">
+                        <img id="exploreDetailSovereigntyImg" />
+                        <div>
+                            <span>Sovereignty</span>
+                            <span id="exploreDetailSovereignty"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 6 7 13 7 13s7-7.1 7-13a7 7 0 0 0-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5 2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5z"/><path fill="none" d="M0 0h24v24H0z"/></svg>
+                        <div>
+                            <span>Region</span>
+                            <span id="exploreDetailRegion"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path fill-rule="evenodd" d="M5.2 14a2.2 2.2 0 0 1-.2-1c0-1.4.7-2.8 2-3.7A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.2z"/><path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>
+                        <div>
+                            <span>Population</span>
+                            <span id="exploreDetailPopulation"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M160 288h-56a8 8 0 0 1-8-8v-16a8 8 0 0 1 8-8h56v-64h-56a8 8 0 0 1-8-8v-16a8 8 0 0 1 8-8h56V96h-56a8 8 0 0 1-8-8V72a8 8 0 0 1 8-8h56V32a32 32 0 0 0-32-32H32A32 32 0 0 0 0 32v448c0 2.8 1 5.2 1.6 7.8L160 329.4V288zm320 64h-32v56a8 8 0 0 1-8 8h-16a8 8 0 0 1-8-8v-56h-64v56a8 8 0 0 1-8 8h-16a8 8 0 0 1-8-8v-56h-64v56a8 8 0 0 1-8 8h-16a8 8 0 0 1-8-8v-56h-41.4L24.2 510.4c2.6.7 5 1.6 7.8 1.6h448a32 32 0 0 0 32-32v-96a32 32 0 0 0-32-32z"/></svg>
+                        <div>
+                            <span>Area (km<sup>2</sup>)</span>
+                            <span id="exploreDetailArea"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M11 2a1 1 0 0 1 2 0v2a8 8 0 0 1 7 7h2a1 1 0 0 1 0 2h-2a8 8 0 0 1-7 7v2a1 1 0 0 1-2 0v-2a8 8 0 0 1-7-7H2a1 1 0 0 1 0-2h2a8 8 0 0 1 7-7V2zm7 10a6 6 0 1 0-12 0 6 6 0 0 0 12 0zm-3 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" clip-rule="evenodd"/></svg>
+                        <div>
+                            <span>Center</span>
+                            <span id="exploreDetailCenter"></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="bordersWrapper" class="exploreSection">
+                    <div class="exploreSectionTitle" onclick="this.classList.toggle('visible');">
+                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 512 512"><path d="M512 273.2V242h-24v-28l-46.3-109.1-46.3 109v28h-26.3v-28l-46.3-109-46.3 109v28h-25.4v-28l-46.3-109-46.3 109v28h-25.4v-28l-46.3-109-46.3 109v28H0v31.4h40.5v35H0v31.3h40.5v67.7h92.6v-67.7h25.4v67.7h92.6v-67.7h25.4v67.7h92.6v-67.7h26.3v67.7H488v-67.7h24V308h-24v-34.9h24zm-353.5 35h-25.4v-35h25.4v35zm118 0h-25.4v-35h25.4v35zm119 0H369v-35h26.3v35z"/></svg>
+                        <span>Borders</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6.5 0 32 32"><path d="m18.8 11.4-7.9 10c-.7.8-1.9.8-2.6 0l-8-10c-.7-1-.3-1.6.9-1.6H18c1.2 0 1.6.7.8 1.6z"/></svg>
+                    </div>
+                    <div class="exploreSectionContent">
+                        <div id="borderCountries"></div>
+                    </div>
+                </div>
+                <div id="territoriesWrapper" class="exploreSection">
+                    <div class="exploreSectionTitle" onclick="this.classList.toggle('visible');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="none" d="M0 0h20v20H0z"/><path d="M10 2s3 2 7 2c0 11-7 14-7 14S3 15 3 4c4 0 7-2 7-2zm0 8h5s1-1 1-5c0 0-5-1-6-2v7H5c1 4 5 7 5 7v-7z"/></svg>
+                        <span>Territories</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6.5 0 32 32"><path d="m18.8 11.4-7.9 10c-.7.8-1.9.8-2.6 0l-8-10c-.7-1-.3-1.6.9-1.6H18c1.2 0 1.6.7.8 1.6z"/></svg>
+                    </div>
+                    <div class="exploreSectionContent">
+                        <div id="territoryCountries"></div>
+                    </div>
+                </div>
+                <div class="exploreSection">
+                    <div class="exploreSectionTitle" onclick="this.classList.toggle('visible');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M9 4v17h9v6h5V4H9zm3.9 4h2v2h-2V8zm4 0h2v2h-2V8zM34 8v38h6v-4h2v4h6V8H34zm-21.1 4h2v2h-2v-2zm4 0h2v2h-2v-2zM42 12h2v2h-2v-2zm-4 0h2v2h-2v-2zm0 4h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2zM2 23v23h6v-4h2v4h6V23H2zm36 1h2v2h-2v-2zm4 0h2v2h-2v-2zM6 26h2v2H6v-2zm4 0h2v2h-2v-2zm28 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-24 1v17h6v-4h2v4h6V29H18zM6 30h2v2H6v-2zm4 0h2v2h-2v-2zm28 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-20 0h2v2h-2v-2zm4 0h2v2h-2v-2zM6 34h2v2H6v-2zm4 0h2v2h-2v-2zm28 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-16 0h2v2h-2v-2zm-4 0h2v2h-2v-2z"/></svg>
+                        <span>Most Populated Cities</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6.5 0 32 32"><path d="m18.8 11.4-7.9 10c-.7.8-1.9.8-2.6 0l-8-10c-.7-1-.3-1.6.9-1.6H18c1.2 0 1.6.7.8 1.6z"/></svg>
+                    </div>
+                    <div id="explorePopulatedCities" class="exploreSectionContent"></div>
+                </div>
+                <div class="exploreSection">
+                    <div class="exploreSectionTitle" onclick="this.classList.toggle('visible');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="m29 19.6-9.4 9.3a2 2 0 0 1-2.9 0L5.3 17.5 2.5 8.7l2-2 4 4a2.5 2.5 0 0 0 4.3 2 2.5 2.5 0 0 0-2.1-4.2l-4-4 2-2 8.8 2.8 11.4 11.4c.8.8.8 2 0 2.9zm-17.6-8.3c-.2.2-.6.2-.8 0L2.8 3.5a.5.5 0 1 1 .7-.8l7.9 8c.2.1.2.4 0 .6z"/></svg>
+                        <span>Alternative Names</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6.5 0 32 32"><path d="m18.8 11.4-7.9 10c-.7.8-1.9.8-2.6 0l-8-10c-.7-1-.3-1.6.9-1.6H18c1.2 0 1.6.7.8 1.6z"/></svg>
+                    </div>
+                    <div id="exploreAlternativeNames" class="exploreSectionContent"></div>
+                </div>
+                <div class="exploreSection">
+                    <div class="exploreSectionTitle" onclick="this.classList.toggle('visible');">
+                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 24 24"><path d="M12 24C5.4 24 0 18.6 0 12S5.4 0 12 0s12 5.4 12 12-5.4 12-12 12zm-2.5-7c.6 3.1 1.7 5 2.5 5s1.9-1.9 2.5-5h-5zm7.1 0a17 17 0 0 1-1.4 4.5c2.3-.8 4.3-2.4 5.5-4.5h-4.1zM3.3 17c1.2 2.1 3.2 3.7 5.5 4.5A17 17 0 0 1 7.4 17H3.3zm13.6-2h4.7a10 10 0 0 0-.1-6h-4.7c.2 1 .2 2 .2 3l-.1 3zm-7.7 0h5.7a26.6 26.6 0 0 0 0-6H9.2a26.6 26.6 0 0 0 0 6zm-6.7 0h4.7l-.1-3 .1-3H2.5c-.3.9-.5 2-.5 3s.2 2.1.5 3zm14.1-8h4.1a10.2 10.2 0 0 0-5.5-4.5A17 17 0 0 1 16.6 7zM9.5 7h5.1c-.6-3.1-1.7-5-2.5-5s-2 1.9-2.6 5zM3.3 7h4.1a17 17 0 0 1 1.4-4.5C6.5 3.3 4.6 4.9 3.3 7z"/></svg>
+                        <span>Languages</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6.5 0 32 32"><path d="m18.8 11.4-7.9 10c-.7.8-1.9.8-2.6 0l-8-10c-.7-1-.3-1.6.9-1.6H18c1.2 0 1.6.7.8 1.6z"/></svg>
+                    </div>
+                    <div id="exploreDetailsLanguages" class="exploreSectionContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading" class="screen centered">
+        <div class="title loaderText">LOADING</div>
+        <div class="loader"></div>
     </div>
 </body>
 </html>
