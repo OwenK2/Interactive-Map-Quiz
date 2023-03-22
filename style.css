@@ -18,6 +18,7 @@
     --accent2: #D6A76B;
     --accent3: #3498DB;
     --error: #D95757;
+    --warning: #EDBC5A;
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     --monospace: "Fira Code", Inconsolata, "SFMono-Regular", "Consolas", "Menlo", monospace;
 }
@@ -838,6 +839,12 @@ input:checked + .radioLabel {
     color: var(--accent);
     font-weight: normal;
 }
+#gameTimer span b.mid {
+    color: var(--warning);
+}
+#gameTimer span b.bad {
+    color: var(--error);
+}
 #menuStat {
     font-family: var(--font);
     color: var(--text_bright);
@@ -845,6 +852,12 @@ input:checked + .radioLabel {
 #menuStat > div:first-child {
     font-size: 4em;
     color: var(--accent);
+}
+#menuStat > div.mid:first-child {
+    color: var(--warning);
+}
+#menuStat > div.bad:first-child {
+    color: var(--error);
 }
 #menuStat > div:last-child {
     font-size: 1em;

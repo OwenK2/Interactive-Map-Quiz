@@ -470,8 +470,8 @@ function submitAnswer(answer) {
         var e = document.querySelector('.feedbackSymbol.visible');
         if(e) {e.classList.remove('visible');}
     }, transitionTime);
-    updateGameTimerStat();
     makeQuestion();
+    updateGameTimerStat();
 }
 function submitFillOutAnswer(input) {
     var ids = name2codeEx(input.value);
@@ -541,7 +541,9 @@ function updateGameTimerStat() {
         document.getElementById('gameTimerStat').innerHTML = '<b>' + game.correct + '</b> / ' + (game.countryPool.length + game.answered);
     }
     else {
-        document.getElementById('gameTimerStat').textContent = (Math.round(game.correct / (game.countryPool.length + game.answered) * 100) || 0) + '%';
+        var grade = Math.round(game.correct / game.answered * 100) || 0;
+        var ranking = grade > 75 ? 'good' : (grade > 50 ? 'mid' : 'bad');
+        document.getElementById('gameTimerStat').innerHTML = game.answered + '/' + (game.countryPool.length + game.answered) + ' <b class="'+ranking+'">' + (grade) + '%</b>';
     }
 }
 var mapMarkers = {};
@@ -725,7 +727,9 @@ function setSummaryData() {
         document.getElementById('menuStat').innerHTML = '<div>'+(Math.round(game.correct / (game.countryPool.length + game.answered) * 100) || 0)+'%</div><div>' + game.correct + ' / ' + (game.countryPool.length + game.answered) + '</div>';
     }
     else {
-        document.getElementById('menuStat').innerHTML = '<div>'+(Math.round(game.correct / game.answered * 100) || 0)+'%</div><div>' + game.correct + ' / ' + game.answered + '</div>';
+        var grade = Math.round(game.correct / game.answered * 100) || 0;
+        var ranking = grade > 75 ? 'good' : (grade > 50 ? 'mid' : 'bad');
+        document.getElementById('menuStat').innerHTML = '<div class="'+ranking+'">'+grade+'%</div><div>' + game.answered + ' / ' + (game.answered + game.countryPool.length) + '</div>';
     }
     document.getElementById('timeStat').innerHTML = '<div>' + (game.timer ? 'Time Remaining' : 'Time') + '</div>' + Math.floor(game.timerValue / 60).toString().padStart(2, '0') + ':' + (game.timerValue % 60).toString().padStart(2, '0');
     document.getElementById('menuSummary').innerHTML = '';
