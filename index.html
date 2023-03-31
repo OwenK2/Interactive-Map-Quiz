@@ -252,6 +252,26 @@
                     <label for="fm_time">Time (mins)</label>
                     <input id="fm_time" type="text" inputmode="numeric" spellcheck="false" autocomplete="off" autocapitalize="none" oninput="filterPosInt(this)" />
                 </div>
+                <div class="halfhalf">
+                    <div>
+                        <label>Question</label>
+                        <div>
+                            <input id="mf_question_1" type="radio" name="mf_question" value="map" oninput="onQuestionRadioChange(this)" class="hidden" checked />
+                            <label for="mf_question_1" class="radioLabel">Map</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Answer</label>
+                        <div>
+                            <input id="mf_answer_3" type="radio" name="mf_answer" value="name" class="hidden" checked />
+                            <label for="mf_answer_3" class="radioLabel">Country Name</label>
+                        </div>
+                        <div>
+                            <input id="mf_answer_4" type="radio" name="mf_answer" value="capital" class="hidden" />
+                            <label for="mf_answer_4" class="radioLabel">Capital</label>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <br><br>
@@ -288,7 +308,7 @@
             <br>
             <div id="menuSummary"></div>
         <br><br>
-        <div id="inGameMenuBtn_new" class="titlebtn"><div onclick="toScreen('newGame');">New Game</div></div>
+        <div id="inGameMenuBtn_new" class="titlebtn"><div onclick="newGame(true)">Replay</div></div>
         <div id="inGameMenuBtn_resume" class="titlebtn"><div onclick="resumeGame();">Resume</div></div>
         <div class="titlebtn"><div onclick="toScreen('home');">Home Screen</div></div>
         <br><br>

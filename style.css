@@ -986,7 +986,7 @@ input:checked + .radioLabel {
 }
 #exploreFactGrid > div {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     margin: 20px 0;
 }
 #exploreFactGrid svg {
@@ -1483,7 +1483,7 @@ ul d, ol d {
         grid: 1fr 1fr 1fr / 1fr 1fr;
     }
     #exploreFactGrid > div {
-        margin: 0;
+        margin: 15px;
     }
 }
 @media all and (max-width: 400px) {

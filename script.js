@@ -7,6 +7,7 @@ const transitionTime = 1000;
 
 const tinyIslands = ["ABW","AIA","ALA","ASM","ATF","ATG","BES","BHR","BHS","BLM","BMU","BRB","BRN","BVT","CCK","COK","COM","CPV","CUW","CXR","CYM","DMA","FJI","FLK","FRO","FSM","GGY","GLP","GRD","GUM","HMD","IMN","IOT","JEY","JAM","KIR","KNA","LCA","MAF","MDV","MHL","MLT","MNP","MSR","MTQ","MUS","MYT","NFK","NIU","NRU","PCN","PLW","PYF","REU","SGS","SHN","SJM","SLB","SPM","STP","SXM","SYC","TCA","TKL","TLS","TON","TTO","TUV","VCT","VGB","VIR","VUT","WLF","WSM"];
 let extendedNames = {"ALAND":["ALA"],"SAMOA":["ASM"],"ANTIGUA":["ATG"],"BARBUDA":["ATG"],"BENGAL":["BGD"],"BIM":["BRB"],"GUDIJA":["BLR"],"DAHOMEY":["BEN"],"BONAIRE":["BES"],"EUSTATIUS":["BES"],"SABA":["BES"],"BOSNIA":["BIH"],"HERZEGOVINA":["BIH"],"BRASIL":["BRA"],"BRITISHINDIAN":["IOT"],"VIRGIN":["VGB","VIR"],"BRITISHVIRGIN":["VGB"],"UKVIRGIN":["VGB"],"USVIRGIN":["VIR"],"UNITEDSTATESVIRGIN":["VIR"],"DARUSSALAM":["BRN"],"BOURKINAFASSO":["BFA"],"KAMPUCHEA":["KHM"],"KHMER":["KHM"],"TCHAD":["TCD"],"CHILLI":["CHL"],"CHILI":["CHL"],"KEELING":["CCK"],"KOMORI":["COM"],"BRAZZAVILLE":["COG"],"DRC":["COD"],"KINSHASA":["COD"],"HRVATSKA":["HRV"],"CZECH":["CZE"],"BOHEMIA":["CZE"],"DANMARK":["DNK"],"DR":["DOM"],"DOMINICAN":["DOM"],"DOMINICANA":["DOM"],"REPUBLICADOMINICANA":["DOM"],"KIMI":["EGY"],"GUINEAEQUATORIAL":["GNQ"],"EESTI":["EST"],"ABYSSINIA":["ETH"],"MALVINAS":["FLK"],"SUOMI":["FIN"],"GUYANE":["GUF"],"POLYNESIA":["PYF"],"FRENCHSOUTHERN":["ATF"],"IVERIA":["GEO"],"DEUTSCHLAND":["DEU"],"GDR":["DEU"],"BRD":["DEU"],"GOLDCOAST":["GHA"],"HELLADA":["GRC"],"HELLAS":["GRC"],"BISSAU":["GIN"],"HEARD":["HMD"],"MCDONALD":["HMD"],"VATICAN":["VAT"],"BHARAT":["IND"],"NUSANTARA":["IDN"],"DUTCHEASTINDIES":["IDN"],"INDUNESIA":["IDN"],"IVORYCOAST":["CIV"],"EIRE":["IRL"],"ZION":["ISR"],"ITALIANA":["ITA"],"ITALIA":["ITA"],"XAMAYCA":["JAM"],"NIPPON":["JPN"],"CHANNEL":["JEY","GGY"],"KYRGYZ":["KGZ"],"LAO":["LAO"],"LATVIJA":["LVA"],"MACEDONIA":["MKD"],"MOLDAVIA":["MDA"],"BURMA":["MMR"],"MARIANA":["MNP"],"NORGE":["NOR"],"FILIPINAS":["PHL"],"POLSKA":["POL"],"RF":["RUS"],"SOVIETUNION":["RUS"],"RUSSIANFEDERATION":["RUS"],"RUANDA":["RWA"],"HELENA":["SHN"],"ASCENSION":["SHN"],"TRISTANDACUNHA":["SHN"],"KITTS":["KNA"],"NEVIS":["KNA"],"MARTIN":["MAF","SXM"],"PIERRE":["SPM"],"MIQUELON":["SPM"],"VINCENT":["VCT"],"GRENADINES":["VCT"],"SAOTOME":["STP"],"PRINCIPE":["STP"],"SOUTHGEORGIA":["SGS"],"SANDWHICH":["SGS"],"HISPANIA":["ESP"],"ESPANA":["ESP"],"EASTTIMOR":["TLS"],"TIMOR":["TLS"],"TRINIDAD":["TTO"],"TOBAGO":["TTO"],"CAICOS":["TCA"],"UAE":["ARE"],"UK":["GBR"],"BRITAIN":["GBR"],"GREATBRITAIN":["GBR"],"USA":["USA"],"AMERICA":["USA"],"WALLIS":["WLF"],"FUTUNA":["WLF"],"SAHRAWI":["ESH"],"MOROCCO":["ESH"],"CABOVERDE":["CPV"],"MACAU":["MAC"]};
+let extendedCapitals = {};
 
 const defaultGame = {
     mode: 1,
@@ -282,7 +283,7 @@ function onSettingsInput(elem) {
 
 
 //Game Functions
-function newGame() {
+function newGame(replay=false) {
     toScreen('loading');
 
     //Clean Up DOM
@@ -299,10 +300,10 @@ function newGame() {
     if(!countryData) {
         loadJSON('countryInfo.json', function(res) {
             setupDataStructs(res);
-            setupGameObject();
+            setupGameObject(replay);
         });
     }
-    else {setupGameObject();}
+    else {setupGameObject(replay);}
 }
 function resumeGame() {
     toScreen('game');
@@ -310,18 +311,64 @@ function resumeGame() {
         document.getElementById('fr_answer_input').focus();
     }
 }
-function setupGameObject() {
-    game.modeData = {},
+function setupGameObject(replay = false) {
     game.history = [];
     game.correct = 0;
     game.answered = 0;
-    game.mode = parseInt(document.querySelector('[name="gameMode"]:checked').value);
-    game.regions = getRegionSetting();
-    game.includeIslands = document.getElementById('includeIslands').checked;
-    game.recognizedOnly = document.getElementById('isRecognized').checked;
     game.ended = false;
     game.isPaused = false;
     game.timerValue = 0;
+
+    // If replay keep the actual game settings
+    if(!replay) {
+        game.modeData = {};
+        game.mode = parseInt(document.querySelector('[name="gameMode"]:checked').value);
+        game.regions = getRegionSetting();
+        game.includeIslands = document.getElementById('includeIslands').checked;
+        game.recognizedOnly = document.getElementById('isRecognized').checked;
+    }
+
+    // Game Mode Specific Settings
+    document.getElementById('answerBank').classList.remove('floating');
+    if(game.mode === 1) {
+        if(!replay) {
+            game.modeData = {
+                q: document.querySelector('[name="mc_question"]:checked').value,
+                a: document.querySelector('[name="mc_answer"]:checked').value,
+                numQuestions: document.querySelector('[name="mc_numQuestions"]:checked').value,
+            };
+        }
+        document.getElementById('answerBank').classList.add('floating');
+    }
+    else if(game.mode === 2) {
+        if(!replay) {
+            game.modeData = {
+                q: document.querySelector('[name="fr_question"]:checked').value,
+                a: document.querySelector('[name="fr_answer"]:checked').value,
+                autocomplete: document.getElementById('fr_autocomplete').checked,
+            };
+        }
+        document.getElementById('fr_answer').classList.add('visible');
+        document.getElementById('fr_answer_input').focus();
+    }
+    else if(game.mode === 3) {
+        if(!replay) {
+            var timer = document.getElementById('fm_timer').checked;
+            var maxTime = parseInt(document.getElementById('fm_time').value) * 60 || 900;
+            game.modeData = {
+                q: 'map',
+                a: document.querySelector('[name="mf_answer"]:checked').value,
+                autocomplete: false,
+                timer: timer,
+                maxTime: timer ? maxTime : Infinity,
+            };
+            game.timer = timer;
+            game.timerValue = timer ? maxTime : 0;
+        }
+        document.getElementById('fr_answer').classList.add('visible');
+        document.getElementById('fr_answer_input').spellcheck = "true";
+        document.getElementById('fr_answer_input').focus();
+    }
 
     // Create countryPool
     game.countryPool = [];
@@ -329,51 +376,17 @@ function setupGameObject() {
         regions[r].forEach(function(c) {
             if(!game.includeIslands && tinyIslands.indexOf(c) > -1) {return;}
             else if(game.recognizedOnly && countryData[c].sovereignty !== undefined) {return;}
+            else if(!hasRequirement(c)) {return;}
             else {game.countryPool.push(c);}
         });
     });
 
+    // Game settings resulted in no countries
     if(game.countryPool.length === 0) {
         endGame('newGame');
         document.getElementById('newGame').scrollTop = 0
         document.getElementById('newGameErr').style.display = 'block';
         return;
-    }
-
-    //Game Mode Specific Settings
-    document.getElementById('answerBank').classList.remove('floating');
-    if(game.mode === 1) {
-        game.modeData = {
-            q: document.querySelector('[name="mc_question"]:checked').value,
-            a: document.querySelector('[name="mc_answer"]:checked').value,
-            numQuestions: document.querySelector('[name="mc_numQuestions"]:checked').value,
-        };
-        document.getElementById('answerBank').classList.add('floating');
-    }
-    else if(game.mode === 2) {
-        game.modeData = {
-            q: document.querySelector('[name="fr_question"]:checked').value,
-            a: document.querySelector('[name="fr_answer"]:checked').value,
-            autocomplete: document.getElementById('fr_autocomplete').checked,
-        };
-        document.getElementById('fr_answer').classList.add('visible');
-        document.getElementById('fr_answer_input').focus();
-    }
-    else if(game.mode === 3) {
-        var timer = document.getElementById('fm_timer').checked;
-        var maxTime = parseInt(document.getElementById('fm_time').value) * 60 || 900;
-        game.modeData = {
-            q: 'map',
-            a: 'name',
-            autocomplete: false,
-            timer: timer,
-            maxTime: timer ? maxTime : Infinity,
-        };
-        game.timer = timer;
-        game.timerValue = timer ? maxTime : 0;
-        document.getElementById('fr_answer').classList.add('visible');
-        document.getElementById('fr_answer_input').spellcheck = "true";
-        document.getElementById('fr_answer_input').focus();
     }
 
     if(game.modeData.q === 'map') {
@@ -474,7 +487,8 @@ function submitAnswer(answer) {
     updateGameTimerStat();
 }
 function submitFillOutAnswer(input) {
-    var ids = name2codeEx(input.value);
+    if(input.value.trim() === '') {return;}
+    var ids = game.modeData.a === 'name' ? name2codeEx(input.value) : capital2codeEx(input.value);
     if(ids.length > 0) {
         var oneCorrect = false;
         var errs = [];
@@ -490,10 +504,10 @@ function submitFillOutAnswer(input) {
                 if(id in mapMarkers) {mapMarkers[id].remove();delete mapMarkers[id];}
             }
             else if(game.history.find(x => x[0] === id)) {
-                errs.push(countryData[id].name + " has already been entered");
+                errs.push(countryData[id][game.modeData.a] + " has already been entered");
             }
             else if(id in countryData) {
-                errs.push(countryData[id].name + " was not included via game settings");
+                errs.push(countryData[id][game.modeData.a] + " was not included via game settings");
             }
         });
         if(oneCorrect) {
@@ -578,14 +592,14 @@ function setMCAnswers(isFirst) {
         countryData[game.answer].borders.shuffle().slice(0, Math.min(game.modeData.numQuestions/2, countryData[game.answer].borders.length)) || [],
         subregions[countryData[game.answer].subregion].slice() || [],
         regions[countryData[game.answer].region].slice() || [],
-        game.countryPool.slice() || [],
         countries.slice() || [],
     ];
     removeItem(pools, game.answer, true);
     while(picked.length < game.modeData.numQuestions) {
         while(pools[p].length === 0) {++p;}
-        picked.push(pools[p][Math.floor(Math.random() * pools[p].length)]);
-        removeItem(pools, picked[picked.length-1], true);
+        var choice = pools[p][Math.floor(Math.random() * pools[p].length)];
+        if(hasRequirement(choice)) picked.push(choice);
+        removeItem(pools, choice, true);
     }
     
     picked.shuffle();
@@ -657,15 +671,14 @@ var autocompletePromise;
 function onFRInput(input) {
     if(game.mode === 3) {submitFillOutAnswer(input);return;}
     var val = normalizeName(input.value);
-    var code = game.modeData.a === 'name' ? name2code(input.value) : capital2code(input.value);
     document.getElementById('fr_suggestions').innerHTML = '';
-    if(game.modeData.autocomplete && val !== '' && !code) {
+    if(game.modeData.autocomplete && val !== '') {
         if(autocompletePromise) {autocompletePromise.cancel();}
-        var searchable = game.modeData.a === 'name' ? autocompleteCountries : autocompleteCapitals;
-        autocompletePromise = fuzzysort.goAsync(val, searchable, autocompleteOptions);
+        autocompletePromise = fuzzysort.goAsync(val,  game.modeData.a === 'name' ? autocompleteCountries : autocompleteCapitals, autocompleteOptions);
         autocompletePromise.then(results => {
             for(var i = 0;i < results.length;++i) {
-                document.getElementById('fr_suggestions').innerHTML += '<div ' + (i === 0 ? 'class="selected" ' : '') + 'onclick="setFRInput(this.textContent)">' + fuzzysort.highlight(results[i]).toLowerCase() + '</div>';
+                var res = Object.assign({}, results[i], {target: countryData[(game.modeData.a === 'name' ? nameToCode[results[i].target] : capitalToCode[results[i].target])][game.modeData.a]});
+                document.getElementById('fr_suggestions').innerHTML += '<div ' + (i === 0 ? 'class="selected" ' : '') + 'onclick="setFRInput(this.textContent)">' + fuzzysort.highlight(res) + '</div>';
             }
         });
     }
@@ -729,7 +742,7 @@ function setSummaryData() {
     else {
         var grade = Math.round(game.correct / game.answered * 100) || 0;
         var ranking = grade > 75 ? 'good' : (grade > 50 ? 'mid' : 'bad');
-        document.getElementById('menuStat').innerHTML = '<div class="'+ranking+'">'+grade+'%</div><div>' + game.answered + ' / ' + (game.answered + game.countryPool.length) + '</div>';
+        document.getElementById('menuStat').innerHTML = '<div class="'+ranking+'">'+grade+'%</div><div>' + game.correct + ' / ' + game.answered + '</div>';
     }
     document.getElementById('timeStat').innerHTML = '<div>' + (game.timer ? 'Time Remaining' : 'Time') + '</div>' + Math.floor(game.timerValue / 60).toString().padStart(2, '0') + ':' + (game.timerValue % 60).toString().padStart(2, '0');
     document.getElementById('menuSummary').innerHTML = '';
@@ -782,15 +795,21 @@ function setupDataStructs(res) {
         if(!regions[countryData[id].region]) {regions[countryData[id].region] = [];}
         subregions[countryData[id].subregion].push(id);
         regions[countryData[id].region].push(id);
-        nameToCode[normalizeName(countryData[id].name)] = id;
-        autocompleteCountries.push(fuzzysort.prepare(normalizeName(countryData[id].name)));
-        capitalToCode[normalizeName(countryData[id].capital)] = id;
-        autocompleteCapitals.push(fuzzysort.prepare(normalizeName(countryData[id].capital)));
+
+        var normalizedName = normalizeName(countryData[id].name);
+        nameToCode[normalizedName] = id;
+        autocompleteCountries.push(fuzzysort.prepare(normalizedName));
+        
+        var normalizedCapital = normalizeName(countryData[id].capital);
+        if(normalizedCapital) {
+            capitalToCode[normalizedCapital] = id;
+            autocompleteCapitals.push(fuzzysort.prepare(normalizedCapital));
+        }
     });
     // Generate even more aliases for extended names
     Object.keys(nameToCode).forEach(x => {
         var name = normalizeNameExtended(x);
-        if(name !== x) {
+        if(name && name !== x) {
             if(name in extendedNames) {
                 if(extendedNames[name].indexOf(nameToCode[x]) === -1) {
                     extendedNames[name].push(nameToCode[x]);
@@ -798,6 +817,19 @@ function setupDataStructs(res) {
             }
             else {
                 extendedNames[name] = [nameToCode[x]];
+            }   
+        }
+    });
+    Object.keys(capitalToCode).forEach(x => {
+        var name = normalizeNameExtended(x);
+        if(name && name !== x) {
+            if(name in extendedCapitals) {
+                if(extendedCapitals[name].indexOf(capitalToCode[x]) === -1) {
+                    extendedCapitals[name].push(capitalToCode[x]);
+                }
+            }
+            else {
+                extendedCapitals[name] = [capitalToCode[x]];
             }   
         }
     });
@@ -943,7 +975,7 @@ Array.prototype.shuffle = function() {
 function hasRequirement(country) {
     switch(game.modeData.a) {
         case 'map':
-            return geometry[country];
+            return country in geometry;
         case 'flag':
             return true;
         case 'name':
@@ -1262,7 +1294,8 @@ function onExploreSearchInput(input) {
         autocompletePromise.then(results => {
             if(results.length > 0) {document.getElementById('searchBarWrapper').classList.add('hasResults');}
             for(var i = 0;i < results.length;++i) {
-                document.getElementById('exploreSearchSuggestions').innerHTML += '<div ' + (i === 0 ? 'class="active" ' : '') + 'onclick="chooseSearchCountry(this.textContent)">' + fuzzysort.highlight(results[i]).toLowerCase() + '</div>';
+                var res = Object.assign({}, results[i], {target: countryData[nameToCode[results[i].target]].name});
+                document.getElementById('exploreSearchSuggestions').innerHTML += '<div ' + (i === 0 ? 'class="active" ' : '') + 'onclick="chooseSearchCountry(this.textContent)">' + fuzzysort.highlight(res) + '</div>';
             }
         });
     }
@@ -1326,18 +1359,20 @@ function name2codeEx(name) {
     var normalNameEx = normalizeNameExtended(name);
     if(normalNameEx in extendedNames) {results.push(...extendedNames[normalNameEx]);}
     if(normalName in nameToCode) {results.push(nameToCode[normalName]);}
-    Object.keys(nameToCode).reduce((res, x) => {
-        if(normalizeNameExtended(x) === normalNameEx) {
-            res.push(nameToCode[x]);
-        }
-        return res;
-    }, []);
     return [...new Set(results)];
 }
 function capital2code(name) {
     name = normalizeName(name);
     if(name in capitalToCode) {return capitalToCode[name];}
     return null;
+}
+function capital2codeEx(name) {
+    var results = [];
+    var normalName = normalizeName(name);
+    var normalNameEx = normalizeNameExtended(name);
+    if(normalNameEx in extendedCapitals) {results.push(...extendedCapitals[normalNameEx]);}
+    if(normalName in capitalToCode) {results.push(capitalToCode[normalName]);}
+    return [...new Set(results)];
 }
 function normalizeNameExtended(name) {
     return name.normalize('NFKD')
@@ -1353,6 +1388,7 @@ function normalizeName(name) {
     return name.normalize('NFKD')
     .trim()
     .replace(/\s/gi, ' ')
-    .replace(/[^a-z ]/gi, '') // delete everything except a-z
+    .replace(/\-/gi, ' ')
+    .replace(/[^a-z ]/gi, '') // delete everything except a-z and spaces
     .toUpperCase(); 
 }
