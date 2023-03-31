@@ -5,6 +5,9 @@ let aliases, countryData, timerInterval, alertIcon;
 let exploreCountry;
 const transitionTime = 1000;
 
+const exploreDetailsBreakPoint = 1000;
+const exploreDetailsHeightBreakPoint = 900;
+
 const tinyIslands = ["ABW","AIA","ALA","ASM","ATF","ATG","BES","BHR","BHS","BLM","BMU","BRB","BRN","BVT","CCK","COK","COM","CPV","CUW","CXR","CYM","DMA","FJI","FLK","FRO","FSM","GGY","GLP","GRD","GUM","HMD","IMN","IOT","JEY","JAM","KIR","KNA","LCA","MAF","MDV","MHL","MLT","MNP","MSR","MTQ","MUS","MYT","NFK","NIU","NRU","PCN","PLW","PYF","REU","SGS","SHN","SJM","SLB","SPM","STP","SXM","SYC","TCA","TKL","TLS","TON","TTO","TUV","VCT","VGB","VIR","VUT","WLF","WSM"];
 let extendedNames = {"ALAND":["ALA"],"SAMOA":["ASM"],"ANTIGUA":["ATG"],"BARBUDA":["ATG"],"BENGAL":["BGD"],"BIM":["BRB"],"GUDIJA":["BLR"],"DAHOMEY":["BEN"],"BONAIRE":["BES"],"EUSTATIUS":["BES"],"SABA":["BES"],"BOSNIA":["BIH"],"HERZEGOVINA":["BIH"],"BRASIL":["BRA"],"BRITISHINDIAN":["IOT"],"VIRGIN":["VGB","VIR"],"BRITISHVIRGIN":["VGB"],"UKVIRGIN":["VGB"],"USVIRGIN":["VIR"],"UNITEDSTATESVIRGIN":["VIR"],"DARUSSALAM":["BRN"],"BOURKINAFASSO":["BFA"],"KAMPUCHEA":["KHM"],"KHMER":["KHM"],"TCHAD":["TCD"],"CHILLI":["CHL"],"CHILI":["CHL"],"KEELING":["CCK"],"KOMORI":["COM"],"BRAZZAVILLE":["COG"],"DRC":["COD"],"KINSHASA":["COD"],"HRVATSKA":["HRV"],"CZECH":["CZE"],"BOHEMIA":["CZE"],"DANMARK":["DNK"],"DR":["DOM"],"DOMINICAN":["DOM"],"DOMINICANA":["DOM"],"REPUBLICADOMINICANA":["DOM"],"KIMI":["EGY"],"GUINEAEQUATORIAL":["GNQ"],"EESTI":["EST"],"ABYSSINIA":["ETH"],"MALVINAS":["FLK"],"SUOMI":["FIN"],"GUYANE":["GUF"],"POLYNESIA":["PYF"],"FRENCHSOUTHERN":["ATF"],"IVERIA":["GEO"],"DEUTSCHLAND":["DEU"],"GDR":["DEU"],"BRD":["DEU"],"GOLDCOAST":["GHA"],"HELLADA":["GRC"],"HELLAS":["GRC"],"BISSAU":["GIN"],"HEARD":["HMD"],"MCDONALD":["HMD"],"VATICAN":["VAT"],"BHARAT":["IND"],"NUSANTARA":["IDN"],"DUTCHEASTINDIES":["IDN"],"INDUNESIA":["IDN"],"IVORYCOAST":["CIV"],"EIRE":["IRL"],"ZION":["ISR"],"ITALIANA":["ITA"],"ITALIA":["ITA"],"XAMAYCA":["JAM"],"NIPPON":["JPN"],"CHANNEL":["JEY","GGY"],"KYRGYZ":["KGZ"],"LAO":["LAO"],"LATVIJA":["LVA"],"MACEDONIA":["MKD"],"MOLDAVIA":["MDA"],"BURMA":["MMR"],"MARIANA":["MNP"],"NORGE":["NOR"],"FILIPINAS":["PHL"],"POLSKA":["POL"],"RF":["RUS"],"SOVIETUNION":["RUS"],"RUSSIANFEDERATION":["RUS"],"RUANDA":["RWA"],"HELENA":["SHN"],"ASCENSION":["SHN"],"TRISTANDACUNHA":["SHN"],"KITTS":["KNA"],"NEVIS":["KNA"],"MARTIN":["MAF","SXM"],"PIERRE":["SPM"],"MIQUELON":["SPM"],"VINCENT":["VCT"],"GRENADINES":["VCT"],"SAOTOME":["STP"],"PRINCIPE":["STP"],"SOUTHGEORGIA":["SGS"],"SANDWHICH":["SGS"],"HISPANIA":["ESP"],"ESPANA":["ESP"],"EASTTIMOR":["TLS"],"TIMOR":["TLS"],"TRINIDAD":["TTO"],"TOBAGO":["TTO"],"CAICOS":["TCA"],"UAE":["ARE"],"UK":["GBR"],"BRITAIN":["GBR"],"GREATBRITAIN":["GBR"],"USA":["USA"],"AMERICA":["USA"],"WALLIS":["WLF"],"FUTUNA":["WLF"],"SAHRAWI":["ESH"],"MOROCCO":["ESH"],"CABOVERDE":["CPV"],"MACAU":["MAC"]};
 let extendedCapitals = {};
@@ -138,6 +141,11 @@ window.addEventListener('load', function() {
         window.addEventListener('resize', onResize);
     }
     window.addEventListener('orientationchange', onResize);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('touchmove', onMouseMove);
+    window.addEventListener('touchend', onMouseUp);
+    window.addEventListener('touchcancel', onMouseUp);
     window.addEventListener('keydown', function(event) {
         if(event.key === 'Escape' && !game.ended && document.getElementById('inGameMenu').classList.contains('visible')) {
             resumeGame();
@@ -157,7 +165,7 @@ window.addEventListener('load', function() {
         iconSize: [24, 24]
     });
 });
-
+var lastWidth;
 function onResize(event) {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
     if(window.visualViewport) {
@@ -168,6 +176,17 @@ function onResize(event) {
     }
     if(map) {map.invalidateSize();}
     if(exploreMap) {exploreMap.invalidateSize();}
+    if(lastWidth) {
+        if(document.body.offsetWidth <= exploreDetailsBreakPoint && lastWidth > exploreDetailsBreakPoint) {
+            document.getElementById('explore').style.gridTemplateRows = 'auto ' + (document.body.offsetHeight < exploreDetailsHeightBreakPoint ? '50' : '40') + '%';
+            document.getElementById('explore').style.gridTemplateColumns = '1fr';
+        }
+        else if(document.body.offsetWidth > exploreDetailsBreakPoint && lastWidth <= exploreDetailsBreakPoint) {
+            document.getElementById('explore').style.gridTemplateColumns = 'auto 350px';
+            document.getElementById('explore').style.gridTemplateRows = '1fr';
+        }
+    }
+    lastWidth = document.body.offsetWidth;
 }
 
 //General UI
@@ -1143,6 +1162,7 @@ function hideExploreDetails() {
         exploreMap.getContainer().style.width = "100vw";
         exploreMap.getContainer().style.height = "100vh";
         exploreMap.invalidateSize();
+        document.getElementById('exploreDetails').style.display = 'none';
     }
 }
 function setExploreDetails(id) {
@@ -1150,6 +1170,7 @@ function setExploreDetails(id) {
         exploreMap.getContainer().style.width = "100%";
         exploreMap.getContainer().style.height = "100%";
         exploreMap.invalidateSize();
+        document.getElementById('exploreDetails').style.display = 'flex';
     }
     document.getElementById('exploreFlag').style.display = 'block';
     document.getElementById('exploreFacts').style.display = 'block';
@@ -1260,6 +1281,67 @@ function setExploreAliases(id) {
         aliasesHTML += '</ul>';
     }
     document.getElementById('exploreAlternativeNames').innerHTML = aliasesHTML;
+}
+var exploreResizeDetails = {isResizing: false};
+function resizeExploreDetails(event, elem) {
+    event.stopPropagation();
+    event.preventDefault();
+    var mx, my;
+    if(event.touches && event.touches.length > 0) {
+        mx = event.touches[0].clientX;
+        my = event.touches[0].clientY;
+    }
+    else {
+        mx = event.clientX;
+        my = event.clientY;
+    }
+    var bb = elem.getBoundingClientRect();
+    elem.classList.add('active');
+    exploreResizeDetails.isResizing = true;
+    exploreResizeDetails.ox = mx - (bb.x + bb.width/2);
+    exploreResizeDetails.oy = my - Math.floor(bb.y + 11);
+    exploreResizeDetails.isVertical = document.body.offsetWidth <= exploreDetailsBreakPoint;
+    exploreResizeDetails.elem = elem;
+    document.getElementById('clickCover').style.display = 'block';
+    onMouseMove(event);
+}
+function onMouseMove(event) {
+    if(exploreResizeDetails.isResizing) {
+        event.stopPropagation();
+        event.preventDefault();
+        var mx, my;
+        if(event.touches && event.touches.length > 0) {
+            mx = event.touches[0].clientX;
+            my = event.touches[0].clientY;
+        }
+        else {
+            mx = event.clientX;
+            my = event.clientY;
+        }
+        var parent = document.getElementById('explore');
+        if(exploreResizeDetails.isVertical) {
+            var y = (document.body.offsetHeight - my + exploreResizeDetails.oy);
+            if(y < 108) {y = 108;}
+            if(y > document.body.offsetHeight - 106) {y = document.body.offsetHeight - 106;}
+            parent.style.gridTemplateRows = 'auto ' + y + 'px';
+            parent.style.gridTemplateColumns = '1fr';
+        }
+        else {
+            var x = (document.body.offsetWidth - mx + exploreResizeDetails.ox);
+            if(x < 250) {x = 250;}
+            if(x > document.body.offsetWidth/2) {x = document.body.offsetWidth/2;}
+            parent.style.gridTemplateColumns = 'auto ' + x + 'px';
+            parent.style.gridTemplateRows = '1fr';
+        }
+    }
+}
+function onMouseUp() {
+    if(exploreResizeDetails.isResizing) {
+        exploreResizeDetails.isResizing = false;
+        if(exploreMap) {exploreMap.invalidateSize();}
+        document.getElementById('clickCover').style.display = 'none';
+        exploreResizeDetails.elem.classList.remove('active');
+    }
 }
 function toggleExploreSearch() {
     document.getElementById('exploreSearch').classList.toggle('visible');

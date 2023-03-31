@@ -25,6 +25,7 @@
     <script defer src="res/lib/fuzzysort-min.js"></script>
 </head>
 <body>
+    <div id="clickCover"></div>
     <div id="home" class="screen centered visible" style="display: grid;">
         <div class="centeredContent">
             <div id="logo">
@@ -329,6 +330,7 @@
         </div>
         <div id="exploreMap"></div>
         <div id="exploreDetails">
+            <div id="resizeTarget" onmousedown="resizeExploreDetails(event, this)" ontouchstart="resizeExploreDetails(event, this)"></div>
             <svg onclick="hideExploreDetails();" class="closeExploreDetails" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2Zm3.36 12.3c.29.29.29.77 0 1.06a.74.74 0 0 1-.53.22.74.74 0 0 1-.53-.22l-2.3-2.3-2.3 2.3a.74.74 0 0 1-.53.22.74.74 0 0 1-.53-.22.75.75 0 0 1 0-1.06l2.3-2.3-2.3-2.3a.75.75 0 0 1 0-1.06.75.75 0 0 1 1.06 0l2.3 2.3 2.3-2.3a.75.75 0 0 1 1.06 0c.29.29.29.77 0 1.06l-2.3 2.3 2.3 2.3Z" /></svg>
             <div class="exploreTitle">
                 <img id="exploreFlag" height="64" style="display: none;" />
