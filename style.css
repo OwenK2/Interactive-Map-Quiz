@@ -1018,6 +1018,23 @@ input:checked + .radioLabel {
     fill: var(--accent3);
     margin-right: 5px;
 }
+#exploreCountryCodes {
+    display: flex;
+    grid-gap: 5px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.listen {
+    height: 1.5em;
+    width: 1.5em;
+    fill: var(--dull);
+    display: inline-block;
+    cursor: pointer;
+    transition: fill .3s;
+}
+.listen:hover, .listen:active {
+    fill: var(--accent);
+}
 #exploreFacts {
     flex: 1;
     width: 100%;
@@ -1031,7 +1048,7 @@ input:checked + .radioLabel {
     align-items: center;
     margin: 20px 0;
 }
-#exploreFactGrid svg {
+#exploreFactGrid > div > svg {
     height: 28px;
     width: 28px;
     fill: var(--text);
@@ -1056,6 +1073,11 @@ input:checked + .radioLabel {
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--dull)
+}
+#exploreFactGrid > div > div > span:last-child {
+    display: flex;
+    grid-gap: 5px;
+    align-items: center;
 }
 .exploreSection {
     margin: 20px 0;

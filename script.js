@@ -1184,6 +1184,11 @@ function setExploreDetails(id) {
     document.getElementById('exploreDetailPopulation').textContent = (countryData[id].population || '-').toLocaleString();
     document.getElementById('exploreDetailArea').innerHTML = (countryData[id].area || '-').toLocaleString();
     document.getElementById('exploreDetailCenter').innerHTML = countryData[id].center ? (countryData[id].center[1].toFixed(2) || '-') + '&#176;, ' + (countryData[id].center[1].toFixed(2) || '-') + '&#176;' : '-';
+    
+    if ('speechSynthesis' in window) {
+        document.getElementById("exploreCountryCodes").innerHTML += ' · <svg onclick="speak(\'' + countryData[id].name + '\');" class="listen" title="Pronounce country name" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.36 19.36a1 1 0 0 1-.7-.29 1 1 0 0 1 0-1.41 8 8 0 0 0 0-11.32 1 1 0 0 1 1.41-1.41 10 10 0 0 1 0 14.14 1 1 0 0 1-.71.29Z" /><path d="M15.54 16.54a1 1 0 0 1-.71-.3 1 1 0 0 1 0-1.41 4 4 0 0 0 0-5.66 1 1 0 0 1 1.41-1.41 6 6 0 0 1 0 8.48 1 1 0 0 1-.7.3ZM11.38 4.08a1 1 0 0 0-1.09.21L6.59 8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2.59l3.7 3.71A1 1 0 0 0 11 20a.84.84 0 0 0 .38-.08A1 1 0 0 0 12 19V5a1 1 0 0 0-.62-.92Z"/></svg>';
+        document.getElementById('exploreDetailCapital').innerHTML += ' <svg onclick="speak(\'' + countryData[id].capital + '\');" class="listen" title="Pronounce capital" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.36 19.36a1 1 0 0 1-.7-.29 1 1 0 0 1 0-1.41 8 8 0 0 0 0-11.32 1 1 0 0 1 1.41-1.41 10 10 0 0 1 0 14.14 1 1 0 0 1-.71.29Z" /><path d="M15.54 16.54a1 1 0 0 1-.71-.3 1 1 0 0 1 0-1.41 4 4 0 0 0 0-5.66 1 1 0 0 1 1.41-1.41 6 6 0 0 1 0 8.48 1 1 0 0 1-.7.3ZM11.38 4.08a1 1 0 0 0-1.09.21L6.59 8H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2.59l3.7 3.71A1 1 0 0 0 11 20a.84.84 0 0 0 .38-.08A1 1 0 0 0 12 19V5a1 1 0 0 0-.62-.92Z"/></svg>';
+    }
 
     if(countryData[id].sovereignty !== undefined) {
         document.getElementById('exploreRecognized').style.display =  'none';
@@ -1320,6 +1325,7 @@ function onMouseMove(event) {
         }
         var parent = document.getElementById('explore');
         if(exploreResizeDetails.isVertical) {
+            if(document.body.offsetHeight - my < 10) {onMouseUp();hideExploreDetails();return;}
             var y = (document.body.offsetHeight - my + exploreResizeDetails.oy);
             if(y < 108) {y = 108;}
             if(y > document.body.offsetHeight - 106) {y = document.body.offsetHeight - 106;}
@@ -1327,6 +1333,7 @@ function onMouseMove(event) {
             parent.style.gridTemplateColumns = '1fr';
         }
         else {
+            if(document.body.offsetWidth - mx < 10) {onMouseUp();hideExploreDetails();return;}
             var x = (document.body.offsetWidth - mx + exploreResizeDetails.ox);
             if(x < 250) {x = 250;}
             if(x > document.body.offsetWidth/2) {x = document.body.offsetWidth/2;}
@@ -1473,4 +1480,12 @@ function normalizeName(name) {
     .replace(/\-/gi, ' ')
     .replace(/[^a-z ]/gi, '') // delete everything except a-z and spaces
     .toUpperCase(); 
+}
+function speak(text) {
+    if (!('speechSynthesis' in window)) {
+       alert('Your browser does not support speech synthesis');
+       return;
+    }
+    var msg = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(msg);
 }
