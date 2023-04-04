@@ -640,7 +640,7 @@ function identifyRemainingCountries() {
     });
     var group = new L.featureGroup(Object.values(mapMarkers));
     map.flyToBounds(group.getBounds(), {padding: [15, 15]});
-    mapMarkerTimeout = setTimeout(clearMapMarkers, 10000);
+    mapMarkerTimeout = setTimeout(clearMapMarkers, 5000);
 }
 function clearMapMarkers() {
     clearTimeout(mapMarkerTimeout);
@@ -756,21 +756,6 @@ function onFRFocus(input) {};
 function onFRBlur(input) {
     if(!game.ended && !game.isPaused) {input.focus();}
 };
-// function onFRFocus(input) {
-//     if(/iPad|iPhone|iPod/.test(navigator.platform)) {
-//         setTimeout(function() {
-//             document.body.style.height = document.documentElement.style.height = window.innerHeight + 'px';
-//             document.body.scrollTop = document.documentElement.scrollTop = 0; 
-//             if(map) {map.invalidateSize();}    
-//         }, 500);
-//     }
-// }
-// function onFRBlur(input) {
-//     if(/iPad|iPhone|iPod/.test(navigator.platform)) {
-//         document.body.style.height = document.documentElement.style.height = '100%';
-//         if(map) {map.invalidateSize();}
-//     }
-// }
 function setFRInput(val) {
     document.getElementById('fr_answer_input').value = val;
     document.getElementById('fr_answer_input').focus();
@@ -842,7 +827,7 @@ function endGame(screen = 'inGameMenu') {
     setTimeout(function() {
         toScreen(screen);
     }, transitionTime);
-    
+    document.getElementById('fr_answer_input').blur();
 }
 
 
