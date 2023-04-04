@@ -82,17 +82,17 @@
             <br>
             <label class="newGameLabel" style="text-align: center">Game Mode</label>
             <div class="gameModes">
-                <input id="gameMode_1" value="1" type="radio" name="gameMode" oninput="onGameModeChange(this.value)" class="hidden" checked />
+                <input id="gameMode_1" value="1" type="radio" name="gameMode" oninput="onGameModeChange(this)" class="hidden" checked />
                 <label for="gameMode_1"><div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M316 30h-17.563C292.24 12.539 275.556 0 256 0c-19.556 0-36.24 12.539-42.437 30H196c-24.814 0-45 20.186-45 45 0 8.291 6.709 15 15 15h180c8.291 0 15-6.709 15-15 0-24.814-20.186-45-45-45z"/><path d="M406 60h-16.518A74.989 74.989 0 01391 75c0 24.814-20.186 45-45 45H166c-24.814 0-45-20.186-45-45 0-5.136.529-10.151 1.518-15H106c-24.814 0-45 20.186-45 45v362c0 24.814 20.186 45 45 45h300c24.814 0 45-20.186 45-45V105c0-24.814-20.186-45-45-45zM211 420h-60c-8.291 0-15-6.709-15-15s6.709-15 15-15h60c8.291 0 15 6.709 15 15s-6.709 15-15 15zm0-105h-60c-8.291 0-15-6.709-15-15s6.709-15 15-15h60c8.291 0 15 6.709 15 15s-6.709 15-15 15zm0-105h-60c-8.291 0-15-6.709-15-15s6.709-15 15-15h60c8.291 0 15 6.709 15 15s-6.709 15-15 15zm145.605 214.395c5.859 5.859 5.859 15.352 0 21.211A14.952 14.952 0 01346 450.001a14.95 14.95 0 01-10.605-4.395L316 426.211l-19.395 19.395A14.952 14.952 0 01286 450.001a14.95 14.95 0 01-10.605-4.395c-5.859-5.859-5.859-15.352 0-21.211L294.789 405l-19.395-19.395c-5.859-5.859-5.859-15.352 0-21.211s15.352-5.859 21.211 0L316 383.789l19.395-19.395c5.859-5.859 15.352-5.859 21.211 0s5.859 15.352 0 21.211L337.211 405l19.394 19.395zm15-143.79l-45 45A14.952 14.952 0 01316 330a14.95 14.95 0 01-10.605-4.395l-30-30c-5.859-5.859-5.859-15.352 0-21.211s15.352-5.859 21.211 0L316 293.789l34.395-34.395c5.859-5.859 15.352-5.859 21.211 0 5.859 5.859 5.859 15.352-.001 21.211zm0-90l-45 45A14.952 14.952 0 01316 240a14.95 14.95 0 01-10.605-4.395l-30-30c-5.859-5.859-5.859-15.352 0-21.211s15.352-5.859 21.211 0L316 203.789l34.395-34.395c5.859-5.859 15.352-5.859 21.211 0s5.859 15.352-.001 21.211z"/></svg>
                     <span>Multiple Choice</span>
                 </div></label>
-                <input id="gameMode_2" value="2" type="radio" name="gameMode" oninput="onGameModeChange(this.value)" class="hidden" />
+                <input id="gameMode_2" value="2" type="radio" name="gameMode" oninput="onGameModeChange(this)" class="hidden" />
                 <label for="gameMode_2"><div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-128 0 512 512"><path d="M234.668 469.332H192c-23.531 0-42.668-19.133-42.668-42.664V85.332c0-23.531 19.137-42.664 42.668-42.664h42.668c11.773 0 21.332-9.54 21.332-21.336S246.441 0 234.668 0H192c-25.602 0-48.34 11.562-64 29.484C112.34 11.562 89.602 0 64 0H21.332C9.559 0 0 9.535 0 21.332s9.559 21.336 21.332 21.336H64c23.531 0 42.668 19.133 42.668 42.664v341.336c0 23.531-19.137 42.664-42.668 42.664H21.332C9.559 469.332 0 478.872 0 490.668S9.559 512 21.332 512H64c25.602 0 48.34-11.563 64-29.484C143.66 500.437 166.398 512 192 512h42.668c11.773 0 21.332-9.535 21.332-21.332s-9.559-21.336-21.332-21.336zm0 0"/></svg>
                     <span>Free<br>Response</span>
                 </div></label>
-                <input id="gameMode_3" value="3" type="radio" name="gameMode" oninput="onGameModeChange(this.value)" class="hidden" />
+                <input id="gameMode_3" value="3" type="radio" name="gameMode" oninput="onGameModeChange(this)" class="hidden" />
                 <label for="gameMode_3"><div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="m19.98 28.05 7.04-3.21V3.95l-7.03 3.21v20.89zm-7.96-3.21L19 27.73V6.84l-6.98-2.89v20.89zM3.98 7.16v20.89l7.04-2.9V4.28l-7.04 2.9z"/></svg>
                     <span>Map Fill</span>
@@ -303,14 +303,15 @@
             <div id="inGameMenuBtn_back" class="floatingBtn red smaller" onclick="toScreen('game');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.26933 329"><path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"></path></svg></div>
         </div>
         <div class="title">Menu</div>
-            <div id="menuStat"><div>0%</div><div>0 / 0</div></div>
-            <br>
-            <div id="timeStat"></div>
-            <br>
-            <div id="menuSummary"></div>
+        <div id="menuStat"><div>0%</div><div>0 / 0</div></div>
+        <br>
+        <div id="shareBtn" onclick="shareScore(event);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12v5a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-5m-7 4V4m0 0L8 8m4-4 4 4"/></svg><div>Share</div></div>
+        <br>
+        <div id="menuSummary"></div>
         <br><br>
-        <div id="inGameMenuBtn_new" class="titlebtn"><div onclick="newGame(true)">Replay</div></div>
         <div id="inGameMenuBtn_resume" class="titlebtn"><div onclick="resumeGame();">Resume</div></div>
+        <br>
+        <div id="inGameMenuBtn_new" class="titlebtn"><div onclick="if(game.ended || confirm('Are you sure you want to restart the game?'))newGame(true)">Replay</div></div>
         <div class="titlebtn"><div onclick="toScreen('home');">Home Screen</div></div>
         <br><br>
     </div>

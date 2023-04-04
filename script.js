@@ -123,15 +123,6 @@ window.addEventListener('load', function() {
   
     settings = defaultSettings;
     setSettingElements();
-    game = defaultGame;
-
-    setRegionSetting(game.regions);
-    document.getElementById('includeIslands').checked = game.includeIslands;
-    document.getElementById('isRecognized').checked = game.recognizedOnly;
-    document.getElementById('resumeGameBtn').style.display = game.ended ? 'none' : 'block';
-    document.getElementById('fm_timer').checked = game.timer;
-    document.getElementById('fm_time').value = Math.round(game.modeData.maxTime / 60);
-    fmTimerInput(document.getElementById('fm_timer'));
 
     onResize();
     if(window.visualViewport) {
@@ -164,6 +155,26 @@ window.addEventListener('load', function() {
         className: 'countryMarker',
         iconSize: [24, 24]
     });
+    
+    // Look for share link
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
+    if(params.game) {
+        var g = urlToGame(params.game);
+        if(g) {
+            toScreen('newGame');
+            game = g;
+        }
+        else {
+            alert("Invalid share url");
+        }
+        this.history.replaceState(null, null, window.location.href.replace(window.location.search, '').replace(/\/*$/, '/'));
+    }
+    else {
+        game = Object.assign({}, defaultGame);
+    }
+    setUIFromGame(game);
 });
 var lastWidth;
 function onResize(event) {
@@ -213,8 +224,8 @@ function toScreen(screen) {
 }
 
 //Game Setup
-function onGameModeChange(value) {
-    var e = document.getElementById('settingGroup_'+value);
+function onGameModeChange(input) {
+    var e = document.getElementById('settingGroup_'+input.value);
     if(e) {
         document.querySelectorAll('.settingGroup.visible').forEach(function(e) {
             e.classList.remove('visible'); 
@@ -275,6 +286,36 @@ function getRegionSetting() {
     }
     return regions;
 }
+function setUIFromGame(g) {
+    setRegionSetting(g.regions);
+    document.getElementById('includeIslands').checked = g.includeIslands;
+    document.getElementById('isRecognized').checked = g.recognizedOnly;
+    document.getElementById('fr_autocomplete').checked = g.modeData.autocomplete;
+    document.getElementById('resumeGameBtn').style.display = g.ended ? 'none' : 'block';
+    document.getElementById('fm_timer').checked = g.timer;
+    document.getElementById('fm_time').value = Math.round(g.modeData.maxTime / 60);
+    fmTimerInput(document.getElementById('fm_timer'));
+    setRadioIfExists('gameMode', g.mode);
+    setRadioIfExists('mc_numQuestions', g.modeData.numQuestions);
+    setRadioIfExists('mc_question', g.modeData.q);
+    setRadioIfExists('mc_answer', g.modeData.a);
+    setRadioIfExists('fr_question', g.modeData.q);
+    setRadioIfExists('fr_answer', g.modeData.a);
+    setRadioIfExists('mf_question', g.modeData.q);
+    setRadioIfExists('mf_answer', g.modeData.a);
+    setSummaryData();
+}
+function setRadioIfExists(name, val) {
+    if(val === undefined) {return false;}
+    var e = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+    if(e) {
+        e.checked = true; 
+        if(e.oninput instanceof Function) {
+            e.oninput(e); 
+        }
+        return true;}
+    return false;
+}
 
 
 //Settings
@@ -307,6 +348,7 @@ function newGame(replay=false) {
 
     //Clean Up DOM
     deleteMap();
+    clearInterval(timerInterval);
     document.querySelectorAll('.mc_answers').forEach(function(e) {e.remove();});
     document.getElementById('fr_answer').classList.remove('visible');
     document.getElementById('fr_answer_input').spellcheck = "false";
@@ -349,6 +391,7 @@ function setupGameObject(replay = false) {
 
     // Game Mode Specific Settings
     document.getElementById('answerBank').classList.remove('floating');
+    game.timer = false;
     if(game.mode === 1) {
         if(!replay) {
             game.modeData = {
@@ -373,12 +416,11 @@ function setupGameObject(replay = false) {
     else if(game.mode === 3) {
         if(!replay) {
             var timer = document.getElementById('fm_timer').checked;
-            var maxTime = parseInt(document.getElementById('fm_time').value) * 60 || 900;
+            var maxTime = parseInt(document.getElementById('fm_time').value) * 60 || 0;
             game.modeData = {
                 q: 'map',
                 a: document.querySelector('[name="mf_answer"]:checked').value,
                 autocomplete: false,
-                timer: timer,
                 maxTime: timer ? maxTime : Infinity,
             };
             game.timer = timer;
@@ -404,6 +446,14 @@ function setupGameObject(replay = false) {
     if(game.countryPool.length === 0) {
         endGame('newGame');
         document.getElementById('newGame').scrollTop = 0
+        document.getElementById('c').textContent = 'No countries match your game settings, please re-configure'
+        document.getElementById('newGameErr').style.display = 'block';
+        return;
+    }
+    else if(game.timer && game.modeData.maxTime && game.modeData.maxTime <= 0) {
+        endGame('newGame');
+        document.getElementById('newGame').scrollTop = 0
+        document.getElementById('c').textContent = 'The timer cannot be 0 or negative';
         document.getElementById('newGameErr').style.display = 'block';
         return;
     }
@@ -566,7 +616,7 @@ function handleTimer(isFirst) {
     else if(!isFirst) {
         ++game.timerValue;
     }
-    document.getElementById('gameTimerValue').textContent = Math.floor(game.timerValue / 60).toString().padStart(2, '0') + ':' + (game.timerValue % 60).toString().padStart(2, '0');
+    document.getElementById('gameTimerValue').textContent = Math.floor(game.timerValue / 60).toString() + ':' + (game.timerValue % 60).toString().padStart(2, '0');
     document.getElementById('gameTimer').className = isFinale ? 'finale' : '';
 }
 function updateGameTimerStat() {
@@ -755,15 +805,11 @@ function fadeOutQuestion(isFirst) {
 }
 
 function setSummaryData() {
-    if(game.mode === 3) {
-        document.getElementById('menuStat').innerHTML = '<div>'+(Math.round(game.correct / (game.countryPool.length + game.answered) * 100) || 0)+'%</div><div>' + game.correct + ' / ' + (game.countryPool.length + game.answered) + '</div>';
-    }
-    else {
-        var grade = Math.round(game.correct / game.answered * 100) || 0;
-        var ranking = grade > 75 ? 'good' : (grade > 50 ? 'mid' : 'bad');
-        document.getElementById('menuStat').innerHTML = '<div class="'+ranking+'">'+grade+'%</div><div>' + game.correct + ' / ' + game.answered + '</div>';
-    }
-    document.getElementById('timeStat').innerHTML = '<div>' + (game.timer ? 'Time Remaining' : 'Time') + '</div>' + Math.floor(game.timerValue / 60).toString().padStart(2, '0') + ':' + (game.timerValue % 60).toString().padStart(2, '0');
+    var grade = game.mode !== 3 ? (Math.round(game.correct / game.answered * 100) || 0) :  (Math.round(game.correct / (game.countryPool.length + game.answered) * 100) || 0);
+    var ranking = grade > 75 ? 'good' : (grade > 50 ? 'mid' : 'bad');
+    var timerVal = Math.floor(game.timerValue / 60).toString() + ':' + (game.timerValue % 60).toString().padStart(2, '0');
+    if(game.timer) {timerVal += '/' + Math.floor(game.modeData.maxTime / 60).toString() + ':' + (game.modeData.maxTime % 60).toString().padStart(2, '0');}
+    document.getElementById('menuStat').innerHTML = '<div class="'+ranking+'">'+grade+'%</div><div>' + game.correct + '/' + (game.mode !== 3 ? game.answered : (game.countryPool.length + game.answered)) + ' · ' + timerVal + '</div>';
     document.getElementById('menuSummary').innerHTML = '';
     for(var i = 0;i < game.history.length;++i) {
         if(game.history[i][1]) {
@@ -774,19 +820,24 @@ function setSummaryData() {
         }
     }
     if(game.ended) {
-        document.getElementById('inGameMenuBtn_new').style.display = 'block';
+        document.querySelector('#inGameMenuBtn_new > div').textContent = 'Replay';
         document.getElementById('inGameMenuBtn_resume').style.display = 'none';
         document.getElementById('inGameMenuBtn_back').style.display = 'none';
+        document.getElementById('shareBtn').style.display = 'inline-block';
     }
     else {
-        document.getElementById('inGameMenuBtn_new').style.display = 'none';
+        document.querySelector('#inGameMenuBtn_new > div').textContent = 'Restart';
         document.getElementById('inGameMenuBtn_resume').style.display = 'block';  
         document.getElementById('inGameMenuBtn_back').style.display = 'block';
+        document.getElementById('shareBtn').style.display = 'none';
     }
 }
 
 function endGame(screen = 'inGameMenu') {
     game.ended = true;
+    if(game.mode === 3) {
+        game.countryPool.forEach(id => {game.history.push([id, false])});
+    }
     clearTimeout(timerInterval);
     setTimeout(function() {
         toScreen(screen);
@@ -1489,3 +1540,122 @@ function speak(text) {
     var msg = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(msg);
 }
+function shareScore(event) {
+    var grade = game.mode !== 3 ? (Math.round(game.correct / game.answered * 100) || 0) :  (Math.round(game.correct / (game.countryPool.length + game.answered) * 100) || 0);
+    var timerVal = Math.floor(game.timerValue / 60).toString() + ':' + (game.timerValue % 60).toString().padStart(2, '0');
+    if(game.timer) {timerVal += '/' + Math.floor(game.modeData.maxTime / 60).toString() + ':' + (game.modeData.maxTime % 60).toString().padStart(2, '0');}
+    var txt = modeToStr() + ' · ' + grade + '% · ' + game.correct + '/' + (game.mode !== 3 ? game.answered : (game.countryPool.length + game.answered)) + ' · ' + timerVal;
+    var url = window.location.href.replace(window.location.search, '').replace(/\/+$/, '/') + '?game=' + gameToUrl();
+    if(navigator.canShare) {
+        navigator.share({
+            title: "Geotective",
+            text: txt + '\n' + url,
+        }).then(() => {createFadeMsg(event.clientX, event.clientY, "SHARED");}).catch(err => {
+            console.error("Failed to share", err);
+        });
+    }
+    else {
+        navigator.clipboard.writeText(txt + "\n" + url).then(
+            () => {
+              createFadeMsg(event.clientX, event.clientY, "COPIED");
+            },
+            (err) => {
+              console.error("Failed to copy score", err);
+            }
+          );  
+    }
+}
+function createFadeMsg(x, y, msg) {
+    var e = document.createElement('div');
+    e.className = 'fadeMsg';
+    e.textContent = msg;
+    setTimeout(function() {
+        e.remove();
+    }, 2000);
+    document.body.appendChild(e);
+    e.style.left = (x) + "px";
+    e.style.top = (y - e.offsetHeight) + "px";
+}
+function modeToStr() {
+    switch(game.mode) {
+        case 1: return "Multiple Choice"; break;
+        case 2: return "Free Response"; break;
+        case 3: return "Fill Out"; break;
+        default: return ""; break;
+    }
+}
+function gameToUrl() {
+    return encodeURIComponent(
+        game.mode.toString() +
+        (game.recognizedOnly ? '1' : '0') +
+        (game.includeIslands ? '1' : '0') +
+        (game.timer ? '1' : '0') +
+        (game.regions.indexOf('Africa') > -1 ? '1' : '0') +
+        (game.regions.indexOf('Americas') > -1 ? '1' : '0') +
+        (game.regions.indexOf('Asia') > -1 ? '1' : '0') +
+        (game.regions.indexOf('Europe') > -1 ? '1' : '0') +
+        (game.regions.indexOf('Oceania') > -1 ? '1' : '0') +
+        (game.regions.indexOf('Polar') > -1 ? '1' : '0') +
+        (game.modeData.autocomplete ? '1' : '0') +
+        qToNum(game.modeData.q).toString() +
+        aToNum(game.modeData.a).toString() +
+        (game.modeData.numQuestions || 4).toString() + 
+        (game.modeData.maxTime || 900).toString()
+    );
+}
+function urlToGame(data) {
+    var obj = Object.assign({}, defaultGame);
+    data = decodeURIComponent(data);
+    if(data.length < 15) {console.error('Data length less than 15'); return false;}
+    try {
+        // Mode
+        var mode = parseInt(data[0]);
+        if(mode < 1 || mode > 3) {console.error('Invalid mode: ' + data[0]);return false;}
+        obj.mode = mode;
+
+        // Flags
+        obj.recognizedOnly = data[1] === '1';
+        obj.includeIslands = data[2] === '1';
+        obj.timer = data[3] === '1';
+        obj.modeData.autocomplete = data[10] === '1';
+
+        //Regions
+        obj.regions = [];
+        if(data[4] === '1') obj.regions.push('Africa');
+        if(data[5] === '1') obj.regions.push('Americas');
+        if(data[6] === '1') obj.regions.push('Asia');
+        if(data[7] === '1') obj.regions.push('Europe');
+        if(data[8] === '1') obj.regions.push('Oceania');
+        if(data[9] === '1') obj.regions.push('Polar');
+
+        // Question type
+        var q = numToQ(parseInt(data[11]));
+        if(!q) {console.error('Invalid q: ' + data[11]);return false;}
+        obj.modeData.q = q;
+
+        // Answer type
+        var a = numToA(parseInt(data[12]));
+        if(!a) {console.error('Invalid a: ' + data[12]);return false;}
+        obj.modeData.a = a;
+
+        // Num Questions
+        var numQuestions = parseInt(data[13])
+        if(numQuestions < 2 || numQuestions > 6) {console.error('Invalid num questions: ' + data[13]);return false;}
+        obj.modeData.numQuestions = numQuestions;
+
+        // Max time
+        var maxTime = parseInt(data.substring(14))
+        if(maxTime <= 0) {console.error('Invalid maxTime: ' + data.substring(14));return false;}
+        obj.modeData.maxTime = maxTime;
+    } 
+    catch(e) {
+        return false;
+    }
+    return obj;
+}
+const questionTypes = ['map', 'flag', 'name', 'capital', 'shape'];
+function qToNum(q) {return questionTypes.indexOf(q);}
+function numToQ(i) {if(i < 0 || i > questionTypes.length-1) {return null;} return questionTypes[i];}
+const answerTypes = ['flag', 'name', 'capital'];
+function aToNum(q) {return answerTypes.indexOf(q);}
+function numToA(i) {if(i < 0 || i > answerTypes.length-1) {return null;} return answerTypes[i];}
