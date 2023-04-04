@@ -1585,7 +1585,7 @@ function gameToUrl() {
         qToNum(game.modeData.q).toString() +
         aToNum(game.modeData.a).toString() +
         (game.modeData.numQuestions || 4).toString() + 
-        (game.modeData.maxTime || 900).toString()
+        (game.modeData.maxTime === Infinity ? (game.modeData.maxTime || 900) : 1).toString()
     );
 }
 function urlToGame(data) {
