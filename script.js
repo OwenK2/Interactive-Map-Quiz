@@ -30,6 +30,7 @@ const defaultGame = {
 };
 const defaultSettings = {
     audio: true,
+    speak: false,
 };
 const defaultCountryStyle = {
     weight: 2,
@@ -143,6 +144,9 @@ window.addEventListener('load', function() {
         }
         else if(event.key === 'Escape' && !game.ended && document.getElementById('game').classList.contains('visible')) {
             toScreen('inGameMenu');
+        }
+        else if(event.key === 'Escape' && (game.ended || game.isPaused)) {
+            toScreen('home');
         }
         if(event.key === '/' && exploreMap) {
             toggleExploreSearch();
@@ -516,22 +520,20 @@ function makeQuestion(c, isFirst) {
 }
 var fsSymbolTimeout;
 function submitAnswer(answer) {
+    var shouldMakeSound = true;
     clearTimeout(fsSymbolTimeout);
     ++game.answered;
     game.history.push([game.answer, game.answer === answer]);
-    if(answer === game.answer) {
-        document.getElementById('fs_correct').classList.add('visible');
-        playSound('res/audio/correct.mp3', .1);
-        ++game.correct;
-    }
-    else {
-        document.getElementById('fs_incorrect').classList.add('visible');
-        playSound('res/audio/incorrect.mp3', .6);
-    }
     
     if(game.mode === 1) {
         document.querySelectorAll('.mc_a').forEach(function(e) {
-            if(e.dataset.value === game.answer) {e.classList.add('correct');}
+            if(e.dataset.value === game.answer) {
+                e.classList.add('correct');
+                if(settings.speak && e.textContent.trim() !== '') {
+                    speak(e.textContent);
+                    shouldMakeSound = false;
+                }
+            }
             else {e.remove();}
         });
     }
@@ -539,14 +541,28 @@ function submitAnswer(answer) {
         setFRInput('');
         document.getElementById('fr_suggestions').innerHTML = '';
         var e = document.createElement('div');
+        var ansTxt = (game.modeData.a === 'name' ? countryData[game.answer].name : countryData[game.answer].capital);
         e.className = 'mc_answers';
-        e.innerHTML = '<div class="mc_a correct">' + (game.modeData.a === 'name' ? countryData[game.answer].name : countryData[game.answer].capital) + '</div>';
+        e.innerHTML = '<div class="mc_a correct">' + ansTxt + '</div>';
+        if(settings.speak) {
+            speak(ansTxt);
+            shouldMakeSound = false;
+        }
         document.getElementById('answerBank').insertBefore(e, document.getElementById('fr_answer'));
         setTimeout(function() {e.classList.add('visible');}, 5);
         setTimeout(function() {
             e.classList.remove('visible');
             setTimeout(function() {e.remove();}, 500);
         }, transitionTime);
+    }
+    if(answer === game.answer) {
+        document.getElementById('fs_correct').classList.add('visible');
+        if(shouldMakeSound) {playSound('res/audio/correct.mp3', .1);}
+        ++game.correct;
+    }
+    else {
+        document.getElementById('fs_incorrect').classList.add('visible');
+        if(shouldMakeSound) {playSound('res/audio/incorrect.mp3', .6);}
     }
     fsSymbolTimeout = setTimeout(function() {
         var e = document.querySelector('.feedbackSymbol.visible');
